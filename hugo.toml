@@ -1,0 +1,26 @@
+baseURL = "https://landoorthy-sudo.github.io/"
+languageCode = "zh"
+title = "Landoorthy 的博客"
+theme = "hugo-theme-ladder"
+defaultContentLanguage = "zh"
+
+[params]
+  brand = "主页"
+  author = "Landoorthy"
+  authorDescription = "阅读｜思考｜产出｜进步"
+  info = "从未停止对未知的探索，尝试分享一些有趣的东西"
+  avatarURL = "images/avatar.png"  # 确保你在 static/images 下放了 avatar.png
+  darkModeTheme = "data-dark-mode"
+
+[[menu.main]]
+  name = "文章"
+  url = "/blog/"
+  weight = 1
+[[menu.main]]
+  name = "归档"
+  url = "/archive/"
+  weight = 2
+[[menu.main]]
+  name = "联系"
+  url = "/contact/"
+  weight = 3
