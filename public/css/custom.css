@@ -1,0 +1,18 @@
+/* 定义旋转动画 */
+@keyframes record-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 针对你之前查到的那个长名字进行精准打击 */
+.home .info .avatar img {
+    animation: record-spin 15s linear infinite; /* 15秒一圈，无限循环 */
+    border-radius: 50% !important; /* 确保是圆的 */
+    display: block; /* 确保它是块级元素以方便旋转 */
+}
+
+/* 鼠标放上去稍微快一点点，增加互动感 */
+.home .info .avatar img:hover {
+    animation-duration: 5s;
+    cursor: pointer;
+}

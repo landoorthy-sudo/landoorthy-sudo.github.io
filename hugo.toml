@@ -12,6 +12,8 @@ hasCJKLanguage = true
   info = "统计学 | 数据科学 | 产品主理人"
   avatarURL = "images/avatar.png"
 
+  customCSS = ["css/custom.css"]
+
   # --- 社交链接（保持原样，因为它是数组格式） ---
   [[params.social]]
     name = "GitHub"
