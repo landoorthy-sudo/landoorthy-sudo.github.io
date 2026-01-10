@@ -2,13 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/blog/</loc>
-    <lastmod>2026-01-10T15:04:57+08:00</lastmod>
-  </url><url>
     <loc>http://localhost:1313/</loc>
+    <lastmod>2026-01-10T16:47:39+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects-data/data-analysis-1/</loc>
+    <lastmod>2026-01-10T16:47:39+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects-data/</loc>
+    <lastmod>2026-01-10T16:47:37+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects-prod/my-first-product/</loc>
+    <lastmod>2026-01-10T16:47:23+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/projects-prod/</loc>
+    <lastmod>2026-01-10T16:47:08+08:00</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/readandwrite/</loc>
     <lastmod>2026-01-10T15:04:57+08:00</lastmod>
   </url><url>
-    <loc>http://localhost:1313/blog/first/</loc>
+    <loc>http://localhost:1313/readandwrite/first/</loc>
     <lastmod>2026-01-10T15:04:57+08:00</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
