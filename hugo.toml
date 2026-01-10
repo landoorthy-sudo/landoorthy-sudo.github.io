@@ -1,6 +1,6 @@
 baseURL = "https://landoorthy-sudo.github.io/"
 languageCode = "zh"
-title = "Landoorthy 的博客"
+title = "Landoorthy 的博客！"
 theme = "hugo-theme-ladder"
 defaultContentLanguage = "zh"
 
