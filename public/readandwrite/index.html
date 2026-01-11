@@ -58,6 +58,25 @@
     <script>hljs.highlightAll();</script>
 
     </head>
+
+<style>
+     
+    @keyframes record-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .home .info .avatar img {
+        animation: record-spin 15s linear infinite !important;
+        border-radius: 50% !important;
+        -webkit-animation: record-spin 15s linear infinite !important;  
+    }
+    
+     
+    .home .info .avatar img:hover {
+        animation-duration: 5s !important;
+    }
+    </style>
 <body>
       <main class="wrapper"><nav class="navigation">
     <section class="container">
@@ -73,11 +92,11 @@
             
             
             <li class="navigation-item navigation-menu">
-                <a class="navigation-link" href="/projects-prod/">产品项目</a>
+                <a class="navigation-link" href="/projects-prod/">产品笔记</a>
             </li>
             
             <li class="navigation-item navigation-menu">
-                <a class="navigation-link" href="/projects-data/">技术项目</a>
+                <a class="navigation-link" href="/projects-data/">技术笔记</a>
             </li>
             
             <li class="navigation-item navigation-menu">

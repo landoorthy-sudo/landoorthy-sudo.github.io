@@ -12,8 +12,6 @@ hasCJKLanguage = true
   info = "统计学 | 数据科学 | 产品主理人"
   avatarURL = "images/avatar.png"
 
-  customCSS = ["css/custom.css"]
-
   # --- 社交链接（保持原样，因为它是数组格式） ---
   [[params.social]]
     name = "GitHub"
@@ -22,12 +20,12 @@ hasCJKLanguage = true
 
 # --- 导航菜单 ---
 [[menu.main]]
-  name = "产品项目"
+  name = "产品笔记"
   url = "/projects-prod/"
   weight = 1
 
 [[menu.main]]
-  name = "技术项目"
+  name = "技术笔记"
   url = "/projects-data/"
   weight = 2
 

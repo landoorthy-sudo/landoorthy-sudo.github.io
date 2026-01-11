@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh"><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS186 数据库导论：SQL 语言笔记</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Ladder@Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。">
+    <meta name="author" content="Landoorthy">
+    <link rel="canonical" href="http://localhost:1313/projects-data/cs186_sql_notes/">
+
+    <link rel="alternate" type="application/rss+xml" href="http://localhost:1313//index.xml" title="Landoorthy 的名片">
+
+    
+
+
+    <meta property="og:url" content="http://localhost:1313/projects-data/cs186_sql_notes/">
+  <meta property="og:site_name" content="Landoorthy 的名片">
+  <meta property="og:title" content="CS186 数据库导论：SQL 语言笔记">
+  <meta property="og:description" content="Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。">
+  <meta property="og:locale" content="zh">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="projects-data">
+    <meta property="article:published_time" content="2026-01-10T16:47:39+08:00">
+    <meta property="article:modified_time" content="2026-01-10T16:47:39+08:00">
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CS186 数据库导论：SQL 语言笔记">
+  <meta name="twitter:description" content="Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "博客标题",
+      "item": "http://localhost:1313/projects-data/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "CS186 数据库导论：SQL 语言笔记",
+      "item": "http://localhost:1313/projects-data/cs186_sql_notes/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "CS186 数据库导论：SQL 语言笔记",
+  "name": "CS186 数据库导论：SQL 语言笔记",
+  "description": "Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。\n",
+  "keywords": [
+    
+  ],
+  "articleBody": "Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。\n1. SQL 概述与子语言 SQL 由关系型数据库管理系统（RDBMS）负责执行与优化，主要包含：\nDDL (Data Definition Language)：用于定义数据结构。 CREATE TABLE：创建表。 约束：PRIMARY KEY（唯一且非空）、FOREIGN KEY（引用关系）。 DML (Data Manipulation Language)：用于查询和操作数据。 2. DML 基础查询框架 标准的 DML 查询逻辑执行顺序通常如下：\nSELECT [DISTINCT] ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY ... LIMIT ... SELECT DISTINCT：去除查询结果中的重复行。 ORDER BY：默认升序排列。 LIMIT：限制返回的行数。 重命名与计算：可以使用 AS 对表或列重命名，或对列进行算术计算。 3. 聚合函数与分组 (Aggregate \u0026 Group By) 常用函数：MAX、MIN、AVG、COUNT、SUM。 注意：DISTINCT AGGREGATE（聚合前去重）与 SELECT DISTINCT（对最终结果去重）作用范围不同。 分组过滤：GROUP BY 分组，HAVING 对分组后的结果按条件过滤。 4. 逻辑算子与集合运算 (AND/OR vs. INTERSECT/UNION) 这一部分重点探讨了逻辑需求在不同语境下的实现方案：\nOR 与 UNION：\nOR 出现在 WHERE 语句里，筛选出满足任一条件的元组。\nUNION 结合两个查询结果，在同样关系、同样投影上二者得到的结果相同。\nUNION ALL 相比 OR 不会去重，执行效率更高。\nAND 与 INTERSECT：\nAND 要求元组同时满足两个需求（若需求冲突则返回空集）。\n不能互换：AND 与 INTERSECT 不同，后者可能会出现“中间结果爆炸”。\n5. 集合 (SET) 与 多重集合 (MULTISET) 语义 在关系代数中，关系被视为集合。\n集合语义 (SET)：返回结果会自动去重。\nUNION（并集）、INTERSECT（交集）、EXCEPT（差集：左有右无）。\n多重集合语义 (MULTISET)：保留重复元素，使用 ALL 关键字。\nUNION ALL：出现次数相加。\nINTERSECT ALL：取出现次数的最小值。\nEXCEPT ALL：出现次数相减（结果不小于 0）。\n6. 多表查询与连接 (Joins) 多表查询在逻辑上基于 Cross Product（笛卡尔积），之后再进行筛选。\nINNER JOIN：保留连接条件（ON 之后内容）匹配的元组。 NATURAL JOIN：基于同名列自动连接（实际不常用）。 OUTER JOIN：保留未匹配元组并以 NULL 填充。 LEFT / RIGHT / FULL 分别对应保留左侧/右侧/两侧表的未匹配内容。 7. 高级子查询与复杂逻辑 谓词判断：使用 (NOT) IN、(NOT) EXISTS、ANY、ALL。\nTough Division (关系除法)：\n场景：找到预定了“所有”船只的水手。\n实现逻辑：找到“不存在任何一艘船，是不存在被该水手预定过的”水手 ID。\nArgmax 查询：\n实现：在子查询里先得到最大值，主查询再匹配该最大值对应的元组。\n快捷法：ORDER BY ... DESC LIMIT 1（注意：此法会忽视并列第一的情况）。\n8. 视图 (Views \u0026 CTE) CREATE VIEW：长期的“命名查询”，本质是逻辑封装而非物理表（类似于函数）。 WITH … AS (CTE)：一次性视图（公用表表达式），提高代码可读性。 子查询：也可以直接在查询中嵌套子查询作为临时 View。 9. NULL 值处理 运算：操作 NULL 得到的依旧是 NULL。\n过滤：WHERE NULL 会返回空结果。\n三值逻辑：\nFALSE AND NULL -\u003e FALSE\nTRUE OR NULL -\u003e TRUE\n聚合：除了 COUNT(*) 外，聚合函数不计入 NULL 值。\n",
+  "wordCount" : "1239",
+  "inLanguage": "zh",
+  "datePublished": "2026-01-10T16:47:39+08:00",
+  "dateModified": "2026-01-10T16:47:39+08:00",
+  "author":{
+    "@type": "Person",
+    "name": "Landoorthy"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/projects-data/cs186_sql_notes/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Landoorthy 的名片",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+    <link rel="icon" href="/images/avatar.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="/images/avatar.png">
+
+<link rel="manifest" href="/images/avatar.png">
+    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" />
+
+    
+    
+    <link rel="stylesheet" href="/css/main.min.ec28f09e946fc0df77c187fcd0d0ebde58fca6de8efb8e1620f3d45c32d4da88.css" integrity="sha256-7CjwnpRvwN93wYf80NDr3lj8pt6O&#43;44WIPPUXDLU2og=" crossorigin="anonymous" media="screen" />
+
+    
+    <link rel="stylesheet" href="/scss/highlight/github-dark.min.min.66034289ee9a113219a2c4aae0a8bd2095ab255c832a42efcf5863f10814e7a1.css" />
+
+    
+    <script src="/js/highlight.min.min.04ed3315a5c3f66e19fbfc8c933577697fe73787c63333adc024c4fabed580bc.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    </head>
+
+<style>
+     
+    @keyframes record-spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .home .info .avatar img {
+        animation: record-spin 15s linear infinite !important;
+        border-radius: 50% !important;
+        -webkit-animation: record-spin 15s linear infinite !important;  
+    }
+    
+     
+    .home .info .avatar img:hover {
+        animation-duration: 5s !important;
+    }
+    </style>
+<body>
+      <main class="wrapper"><nav class="navigation">
+    <section class="container">
+        <a class="navigation-brand" href="/">
+            主页
+        </a>
+        <input type="checkbox" id="menu-toggle" />
+        <label class="menu-button float-right" for="menu-toggle">
+            <span></span><span></span><span></span>
+        </label>
+        
+        <ul class="navigation-list" id="navigation-list">
+            
+            
+            <li class="navigation-item navigation-menu">
+                <a class="navigation-link" href="/projects-prod/">产品笔记</a>
+            </li>
+            
+            <li class="navigation-item navigation-menu">
+                <a class="navigation-link" href="/projects-data/">技术笔记</a>
+            </li>
+            
+            <li class="navigation-item navigation-menu">
+                <a class="navigation-link" href="/readandwrite/">阅读与写作</a>
+            </li>
+            
+            
+
+            <li class="navigation-item menu-separator">
+                <span>|</span>
+            </li>
+
+            
+            
+            <li class="navigation-item navigation-social">
+                <a class="navigation-link" href="https://github.com/landoorthy-sudo"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+            </li>
+            
+            
+
+            
+        </ul>
+        
+    </section>
+</nav>
+<div id="content">
+<article class="blog-single">
+  <header class="blog-title">
+    <h1>CS186 数据库导论：SQL 语言笔记</h1>
+  </header>
+
+  <p>
+  <small>
+    2026年1月10日&nbsp;· 1239 字&nbsp;· 3 分钟</small>
+
+  
+<p>
+
+  <div class="blog-toc">
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#1-sql-概述与子语言">1. SQL 概述与子语言</a></li>
+    <li><a href="#2-dml-基础查询框架">2. DML 基础查询框架</a></li>
+    <li><a href="#3-聚合函数与分组-aggregate--group-by">3. 聚合函数与分组 (Aggregate &amp; Group By)</a></li>
+    <li><a href="#4-逻辑算子与集合运算-andor-vs-intersectunion">4. 逻辑算子与集合运算 (AND/OR vs. INTERSECT/UNION)</a></li>
+    <li><a href="#5-集合-set-与-多重集合-multiset-语义">5. 集合 (SET) 与 多重集合 (MULTISET) 语义</a></li>
+    <li><a href="#6-多表查询与连接-joins">6. 多表查询与连接 (Joins)</a></li>
+    <li><a href="#7-高级子查询与复杂逻辑">7. 高级子查询与复杂逻辑</a></li>
+    <li><a href="#8-视图-views--cte">8. 视图 (Views &amp; CTE)</a></li>
+    <li><a href="#9-null-值处理">9. NULL 值处理</a></li>
+  </ul>
+</nav>
+  </div>
+
+  <section class="blog-content"><p>Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。</p>
+<h2 id="1-sql-概述与子语言">1. SQL 概述与子语言</h2>
+<p>SQL 由关系型数据库管理系统（<strong>RDBMS</strong>）负责执行与优化，主要包含：</p>
+<ul>
+<li><strong>DDL (Data Definition Language)</strong>：用于定义数据结构。
+<ul>
+<li><code>CREATE TABLE</code>：创建表。</li>
+<li><strong>约束</strong>：<code>PRIMARY KEY</code>（唯一且非空）、<code>FOREIGN KEY</code>（引用关系）。</li>
+</ul>
+</li>
+<li><strong>DML (Data Manipulation Language)</strong>：用于查询和操作数据。</li>
+</ul>
+<hr>
+<h2 id="2-dml-基础查询框架">2. DML 基础查询框架</h2>
+<p>标准的 DML 查询逻辑执行顺序通常如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#66d9ef">SELECT</span> [<span style="color:#66d9ef">DISTINCT</span>] ... 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> ... 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">WHERE</span> ... 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">GROUP</span> <span style="color:#66d9ef">BY</span> ... 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">HAVING</span> ... 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> ... 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">LIMIT</span> ...
+</span></span></code></pre></div><ul>
+<li><strong>SELECT DISTINCT</strong>：去除查询结果中的重复行。</li>
+<li><strong>ORDER BY</strong>：默认升序排列。</li>
+<li><strong>LIMIT</strong>：限制返回的行数。</li>
+<li><strong>重命名与计算</strong>：可以使用 <code>AS</code> 对表或列重命名，或对列进行算术计算。</li>
+</ul>
+<hr>
+<h2 id="3-聚合函数与分组-aggregate--group-by">3. 聚合函数与分组 (Aggregate &amp; Group By)</h2>
+<ul>
+<li><strong>常用函数</strong>：<code>MAX</code>、<code>MIN</code>、<code>AVG</code>、<code>COUNT</code>、<code>SUM</code>。</li>
+<li><strong>注意</strong>：<code>DISTINCT AGGREGATE</code>（聚合前去重）与 <code>SELECT DISTINCT</code>（对最终结果去重）作用范围不同。</li>
+<li><strong>分组过滤</strong>：<code>GROUP BY</code> 分组，<code>HAVING</code> 对分组后的结果按条件过滤。</li>
+</ul>
+<hr>
+<h2 id="4-逻辑算子与集合运算-andor-vs-intersectunion">4. 逻辑算子与集合运算 (AND/OR vs. INTERSECT/UNION)</h2>
+<p>这一部分重点探讨了逻辑需求在不同语境下的实现方案：</p>
+<ul>
+<li>
+<p><strong>OR 与 UNION</strong>：</p>
+</li>
+<li>
+<p><code>OR</code> 出现在 <code>WHERE</code> 语句里，筛选出满足任一条件的元组。</p>
+</li>
+<li>
+<p><code>UNION</code> 结合两个查询结果，在同样关系、同样投影上二者得到的结果相同。</p>
+</li>
+<li>
+<p><code>UNION ALL</code> 相比 <code>OR</code> 不会去重，执行效率更高。</p>
+</li>
+<li>
+<p><strong>AND 与 INTERSECT</strong>：</p>
+</li>
+<li>
+<p><code>AND</code> 要求元组同时满足两个需求（若需求冲突则返回空集）。</p>
+</li>
+<li>
+<p><strong>不能互换</strong>：<code>AND</code> 与 <code>INTERSECT</code> 不同，后者可能会出现“中间结果爆炸”。</p>
+</li>
+</ul>
+<hr>
+<h2 id="5-集合-set-与-多重集合-multiset-语义">5. 集合 (SET) 与 多重集合 (MULTISET) 语义</h2>
+<p>在关系代数中，关系被视为集合。</p>
+<ul>
+<li>
+<p><strong>集合语义 (SET)</strong>：返回结果会自动去重。</p>
+</li>
+<li>
+<p><code>UNION</code>（并集）、<code>INTERSECT</code>（交集）、<code>EXCEPT</code>（差集：左有右无）。</p>
+</li>
+<li>
+<p><strong>多重集合语义 (MULTISET)</strong>：保留重复元素，使用 <code>ALL</code> 关键字。</p>
+</li>
+<li>
+<p><code>UNION ALL</code>：出现次数相加。</p>
+</li>
+<li>
+<p><code>INTERSECT ALL</code>：取出现次数的最小值。</p>
+</li>
+<li>
+<p><code>EXCEPT ALL</code>：出现次数相减（结果不小于 0）。</p>
+</li>
+</ul>
+<hr>
+<h2 id="6-多表查询与连接-joins">6. 多表查询与连接 (Joins)</h2>
+<p>多表查询在逻辑上基于 <strong>Cross Product</strong>（笛卡尔积），之后再进行筛选。</p>
+<ul>
+<li><strong>INNER JOIN</strong>：保留连接条件（<code>ON</code> 之后内容）匹配的元组。</li>
+<li><strong>NATURAL JOIN</strong>：基于同名列自动连接（实际不常用）。</li>
+<li><strong>OUTER JOIN</strong>：保留未匹配元组并以 <code>NULL</code> 填充。</li>
+<li><code>LEFT</code> / <code>RIGHT</code> / <code>FULL</code> 分别对应保留左侧/右侧/两侧表的未匹配内容。</li>
+</ul>
+<hr>
+<h2 id="7-高级子查询与复杂逻辑">7. 高级子查询与复杂逻辑</h2>
+<ul>
+<li>
+<p><strong>谓词判断</strong>：使用 <code>(NOT) IN</code>、<code>(NOT) EXISTS</code>、<code>ANY</code>、<code>ALL</code>。</p>
+</li>
+<li>
+<p><strong>Tough Division (关系除法)</strong>：</p>
+</li>
+<li>
+<p><strong>场景</strong>：找到预定了“所有”船只的水手。</p>
+</li>
+<li>
+<p><strong>实现逻辑</strong>：找到“不存在任何一艘船，是不存在被该水手预定过的”水手 ID。</p>
+</li>
+<li>
+<p><strong>Argmax 查询</strong>：</p>
+</li>
+<li>
+<p><strong>实现</strong>：在子查询里先得到最大值，主查询再匹配该最大值对应的元组。</p>
+</li>
+<li>
+<p><strong>快捷法</strong>：<code>ORDER BY ... DESC LIMIT 1</code>（注意：此法会忽视并列第一的情况）。</p>
+</li>
+</ul>
+<hr>
+<h2 id="8-视图-views--cte">8. 视图 (Views &amp; CTE)</h2>
+<ul>
+<li><strong>CREATE VIEW</strong>：长期的“命名查询”，本质是逻辑封装而非物理表（类似于函数）。</li>
+<li><strong>WITH &hellip; AS (CTE)</strong>：一次性视图（公用表表达式），提高代码可读性。</li>
+<li><strong>子查询</strong>：也可以直接在查询中嵌套子查询作为临时 View。</li>
+</ul>
+<hr>
+<h2 id="9-null-值处理">9. NULL 值处理</h2>
+<ul>
+<li>
+<p><strong>运算</strong>：操作 NULL 得到的依旧是 NULL。</p>
+</li>
+<li>
+<p><strong>过滤</strong>：<code>WHERE NULL</code> 会返回空结果。</p>
+</li>
+<li>
+<p><strong>三值逻辑</strong>：</p>
+</li>
+<li>
+<p><code>FALSE AND NULL</code> -&gt; <code>FALSE</code></p>
+</li>
+<li>
+<p><code>TRUE OR NULL</code> -&gt; <code>TRUE</code></p>
+</li>
+<li>
+<p><strong>聚合</strong>：除了 <code>COUNT(*)</code> 外，聚合函数不计入 NULL 值。</p>
+</li>
+</ul></section>
+
+  
+  
+
+  
+
+
+</article>
+
+        </div><footer class="footer">
+  <p>&copy; 2026 <a href="http://localhost:1313/">Landoorthy 的名片</a>
+    Powered by
+    <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo️️</a>
+    <a href="https://github.com/guangzhengli/hugo-theme-ladder" rel="noopener" target="_blank">Ladder</a>
+️  </p>
+</footer>
+
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.5376 22.7916C11.0152 22.7207 22.5795 21.1781 22.0978 10.4211C22.0536 9.43274 21.9303 8.53367 21.7387 7.71865M10.5376 22.7916C16.876 22.3728 20.0969 19.8899 21.5383 16.9142M10.5376 22.7916C9.7707 22.9055 8.97982 22.8964 8.19743 22.7725M21.7387 7.71865C21.4988 6.69828 21.1518 5.80967 20.7188 5.04257M21.7387 7.71865C22.6022 10.1105 23.0542 13.7848 21.5383 16.9142M20.7188 5.04257C17.1684 -1.24629 7.83127 0.632493 4.27577 5.04257C2.88063 6.77451 -0.0433281 11.1668 1.38159 16.6571C2.27481 20.0988 5.17269 22.2936 8.19743 22.7725M20.7188 5.04257C22.0697 6.9404 24.0299 11.3848 22.3541 15.4153M21.5383 16.9142C21.8737 16.4251 22.1428 15.9235 22.3541 15.4153M8.19743 22.7725C12.1971 23.4683 20.6281 22.971 22.3541 15.4153M14 10.945C13.3836 10.289 12.003 8.63215 11.2034 7.04814C11.1703 6.98257 11.0247 6.98456 10.9937 7.05061C10.5221 8.05496 9.07362 9.92941 8 10.945M11.0333 7.44444C10.9392 9.86549 11 15 12 17" stroke="currentColor" stroke-linecap="round"/>
+    </svg>
+</a>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'Copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'Copied';
+            setTimeout(() => {
+                copybutton.innerHTML = 'Copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+        codeblock.parentNode.appendChild(copybutton);
+    });
+</script></main>
+    </body><script src="/main.min.cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e.js" integrity="sha512-z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP&#43;DGNKHfuwvY7kxvUdBeoGlODJ6&#43;SfaPg==" crossorigin="anonymous" defer></script></html>
