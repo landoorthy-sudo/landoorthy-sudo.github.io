@@ -3,10 +3,10 @@ title: CS186 数据库导论：SQL 语言笔记
 date: 2026-01-10T16:47:39+08:00
 tags: []
 series: []
-featured: true
+featured: false
 ---
 
-Summary：记录了博主在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。
+Summary：记录了我在学习 Berkeley 的 CS186 数据库导论 第一部分的学习笔记。
 
 <!--more-->
 
