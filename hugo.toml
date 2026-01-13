@@ -12,7 +12,7 @@ hasCJKLanguage = true
   brand = "主页"
   author = "Landoorthy"
   authorDescription = "CUHKSZ - SDS - 2028"
-  info = "统计学 | 数据科学 | 产品主理人 <br> 🐱🙌 你可能会发现主页里的项目很普通，但是我的小猫很曼妙。<br> Un jour je serai de retour près de toi."
+  info = "统计学 | 数据科学 | 产品主理人 <br> 🐱🙌 你可能会发现主页里的项目很普通，但是我的小猫很曼妙！<br> Un jour je serai de retour près de toi."
   avatarURL = "images/avatar.png"
 
   # --- 社交链接（保持原样，因为它是数组格式） ---
