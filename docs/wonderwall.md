@@ -1,6 +1,6 @@
 # Wonderwall
 
-GitHub Pages 上的纯静态创作奖励游戏，访问 `/wonderwall/`。Hugo 将 `static/wonderwall/` 原样复制到输出目录；导航入口在 `hugo.toml` 中。
+GitHub Pages 上的纯静态创作奖励游戏，访问 `/wonderwall/`。Hugo 将 `static/wonderwall/` 原样复制到输出目录；主页「工具栏」中的入口由 `content/tools/wonderwall.md` 提供，该条目直接链接到游戏，不生成额外介绍页。
 
 [桌面预览](wonderwall-preview.png) · [手机预览](wonderwall-mobile.png)
 

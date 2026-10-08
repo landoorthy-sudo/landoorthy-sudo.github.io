@@ -5,9 +5,12 @@ on:
       - 'static/wonderwall/**'
       - 'tests/wonderwall.test.mjs'
       - 'hugo.toml'
+      - 'content/tools/wonderwall.md'
       - '.github/workflows/wonderwall-checks.yml'
   push:
     paths:
+      - 'hugo.toml'
+      - 'content/tools/wonderwall.md'
       - 'static/wonderwall/**'
       - 'tests/wonderwall.test.mjs'
       - '.github/workflows/wonderwall-checks.yml'
@@ -36,3 +39,5 @@ jobs:
           hugo --minify --destination /tmp/wonderwall-public
           test -f /tmp/wonderwall-public/wonderwall/index.html
           test -f /tmp/wonderwall-public/wonderwall/core.mjs
+          grep -q 'href=/wonderwall/' /tmp/wonderwall-public/tools/index.html
+          grep -q '写文会爆金币' /tmp/wonderwall-public/tools/index.html
