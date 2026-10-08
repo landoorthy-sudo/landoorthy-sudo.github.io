@@ -37,3 +37,8 @@ hasCJKLanguage = true
   name = "阅读与写作"
   url = "/articles/"
   weight = 3
+
+[[menu.main]]
+  name = "🎮 Wonderwall"
+  url = "/wonderwall/"
+  weight = 4
