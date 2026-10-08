@@ -3,7 +3,7 @@ title: "🎮 Wonderwall · 写文会爆金币"
 date: 2026-10-07T21:16:40-07:00
 url: "/wonderwall/"
 description: "写作奖励小游戏：记录字数、隐形创作和 Boss Clear，获得 Wonder Coin，兑换好喝的、小甜品和海滨公园出逃。"
-_build:
+build:
   render: link
   list: always
 ---
