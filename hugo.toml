@@ -1,6 +1,6 @@
 baseURL = "https://landoorthy-sudo.github.io/"
 languageCode = "zh"
-title = "Landoorthy 的名片"
+title = "Landoorthy 与丝瓜的房间"
 theme = "hugo-theme-ladder"
 defaultContentLanguage = "zh"
 hasCJKLanguage = true
@@ -9,11 +9,11 @@ hasCJKLanguage = true
   unsafe = true  # 必须设置为 true，才能让 Markdown 里的 HTML 生效
 
 [params]
-  brand = "主页"
+  brand = "丝瓜的房间"
   author = "Landoorthy"
-  description = "Landoorthy 的个人主页：统计学与数据科学、AI 工具与写作。"
+  description = "Landoorthy 与小猫丝瓜的房间：写作、读书游戏，以及 AI 与技术。"
   authorDescription = "CUHKSZ - SDS - 2028"
-  info = "统计学 | 数据科学 | 产品主理人 <br> 🐱🙌 项目很普通，但是我的小猫很曼妙！"
+  info = "写小说，也和大模型打交道。<br>欢迎来玩，随便看看，别踩到猫。"
   avatarURL = "images/avatar.png"
 
   # --- 社交链接（保持原样，因为它是数组格式） ---
@@ -22,19 +22,24 @@ hasCJKLanguage = true
     url = "https://github.com/landoorthy-sudo"
     pre = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>'
 
-# --- 导航菜单 ---
+# --- 导航菜单：房间里的家具 ---
 
 [[menu.main]]
-  name = "工具栏"
-  url = "/tools/"
+  name = "书桌"
+  url = "/desk/"
   weight = 1
 
 [[menu.main]]
-  name = "技术笔记"
-  url = "/notes/"
+  name = "书架"
+  url = "/shelf/"
   weight = 2
 
 [[menu.main]]
-  name = "阅读与写作"
-  url = "/articles/"
+  name = "电脑"
+  url = "/notes/"
   weight = 3
+
+[[menu.main]]
+  name = "关于"
+  url = "/about/"
+  weight = 4
