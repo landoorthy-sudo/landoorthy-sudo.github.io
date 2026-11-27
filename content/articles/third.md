@@ -4,6 +4,7 @@ date: 2026-01-10T15:04:57+08:00
 tags: []
 series: []
 featured: false
+draft: true
 ---
 Summary：读 文字叙事游戏 《赛博朋克酒保行动》。
 

@@ -1,0 +1,77 @@
+/* 丝瓜的房间 —— 在 Ladder 主题上加的一点点装饰。html 字号为 62.5%，1rem = 10px */
+
+.room-sign {
+  display: inline-block;
+  margin: 0 0 0.6rem;
+  font-size: 1.4rem;
+  color: #6c6c6c;
+  letter-spacing: 0.05em;
+}
+
+/* 首页 */
+.cat-room .avatar {
+  flex-direction: column;
+  gap: 1rem;
+}
+.cat-room .cat-name {
+  font-size: 1.4rem;
+  color: #6c6c6c;
+}
+
+.room {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.6rem;
+  padding: 2rem 2rem 4rem;
+}
+.furniture {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 2rem 1.8rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  color: #212121;
+  text-decoration: none;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.furniture:hover,
+.furniture:focus-visible {
+  border-color: #212121;
+  transform: translateY(-3px);
+  text-decoration: none;
+}
+.furniture-icon { font-size: 2.8rem; line-height: 1.2; margin-bottom: 0.6rem; }
+.furniture-name { font-size: 2.2rem; font-weight: 700; }
+.furniture-what { font-size: 1.5rem; }
+.furniture-note { font-size: 1.4rem; color: #6c6c6c; }
+
+@media only screen and (max-width: 900px) {
+  .room { grid-template-columns: repeat(2, 1fr); }
+}
+@media only screen and (max-width: 480px) {
+  .room { gap: 1rem; padding: 1rem 1rem 3rem; }
+  .furniture { padding: 1.4rem 1.2rem; }
+  .furniture-name { font-size: 1.9rem; }
+}
+
+/* 书桌、书架、门牌页面 */
+.room-page .room-lede {
+  margin-top: 0.8rem;
+  color: #6c6c6c;
+}
+.room-back {
+  margin-top: 4rem;
+  font-size: 1.5rem;
+}
+
+/* 页脚 */
+.room-footer {
+  font-size: 1.4rem;
+  color: #6c6c6c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .furniture { transition: none; }
+  .home .info .avatar img { animation: none !important; }
+}
