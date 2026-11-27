@@ -1,7 +1,7 @@
 ---
 title: "读书 · 游戏 · 影视"
 furniture: "📚 书架"
-description: "最近在读、在玩、在看的东西。丝瓜负责把它们从架子上推下来。"
+description: "最近在读、在玩、在看的东西。丝瓜来串门时，负责把它们从架子上推下来。"
 layout: room
 url: "/shelf/"
 ---

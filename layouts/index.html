@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.Language.Lang }}" style="font-size: 62.5%">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    <meta name="description" content="{{ .Site.Params.description }}">
+    <meta name="author" content="{{ .Site.Params.author }}">
+    <meta name="theme-color" content="#0e0c1d">
+    <link rel="canonical" href="{{ .Permalink }}">
+    {{ partial "common/icon.html" . }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css" />
+    <link rel="stylesheet" href="{{ "css/room.css" | relURL }}" />
+</head>
+<body class="room-home">
+    <main>
+        <section id="pixel-room" class="pixel-room" data-base="{{ "/" | relURL }}" aria-label="Landoorthy 的像素小房间">
+            <div class="pr-phone">
+                <p class="pr-date">TODAY</p>
+                <p class="pr-hello">欢迎，访客。</p>
+                <div class="pr-about">
+                    <h1>{{ .Site.Params.author }}</h1>
+                    <p>{{ .Site.Params.info | markdownify }}</p>
+                </div>
+                <ul>
+                    <li>阿里：在家</li>
+                    <li>丝瓜：照看南瓜中</li>
+                    <li>南瓜：睡着了</li>
+                </ul>
+                <p class="pr-links">
+                    {{ range .Site.Params.social }}<a href="{{ .url }}" rel="noopener" target="_blank">{{ .name }}</a>{{ end }}
+                    <a href="{{ "/about/" | relURL }}">About me</a>
+                </p>
+            </div>
+            <div class="pr-stage">
+                <div class="pr-titlebar"><span>Landoorthy 的房间</span><span>▸ LANDOORTHY</span></div>
+                <div class="pr-screen">
+                    <canvas width="192" height="108" role="img" aria-label="像素风的小房间：白色小狗阿里穿着橙色背心在屋里跑来跑去，银色大猫丝瓜趴在地毯上，怀里睡着金色小猫南瓜。"></canvas>
+                    <p class="pr-tip" hidden></p>
+                </div>
+                <div class="pr-dialog" aria-live="polite"><span class="pr-name">阿里</span><p class="pr-text">你回来啦！今天丝瓜带着南瓜来串门了。</p></div>
+                <nav class="pr-menu" aria-label="房间里的家具">
+                    {{ range .Site.Data.room }}<a href="{{ .url | relURL }}">{{ .name }} · {{ .what }}</a>{{ end }}
+                    <button type="button" data-lamp>关灯</button>
+                </nav>
+            </div>
+        </section>
+    </main>
+    <footer class="room-home-footer">
+        <p>南瓜正在睡觉，请轻声离开。 · &copy; {{ now.Year }} {{ .Site.Params.author }}</p>
+    </footer>
+    <script src="{{ "js/pixel-room.js" | relURL }}" defer></script>
+</body>
+</html>
