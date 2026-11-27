@@ -1,28 +1,39 @@
 <div class="home cat-room">
     <div class="info">
         <div class="intro">
-            <p class="room-sign">Landoorthy 与丝瓜的房间</p>
+            <p class="room-sign">Landoorthy 的房间</p>
             <h1>{{ .Site.Params.author }}</h1>
             <small>{{ .Site.Params.authorDescription | markdownify }}</small>
             <p>{{ .Site.Params.info | markdownify }}</p>
         </div>
 
         {{ with .Site.Params.avatarURL }}
-        <div class="avatar">
-            <img src="{{ . | relURL }}" alt="丝瓜，一只银色的小猫">
-            <span class="cat-name">丝瓜 · 房间主人</span>
-        </div>
+        <div class="avatar"><img src="{{ . | relURL }}" alt="头像"></div>
         {{ end }}
     </div>
 
-    <section class="room" aria-label="房间里的家具">
-        {{ range .Site.Data.room }}
-        <a class="furniture" href="{{ .url | relURL }}">
-            <span class="furniture-icon" aria-hidden="true">{{ .icon }}</span>
-            <span class="furniture-name">{{ .name }}</span>
-            <span class="furniture-what">{{ .what }}</span>
-            <span class="furniture-note">{{ .note }}</span>
-        </a>
-        {{ end }}
+    <section id="pixel-room" class="pixel-room" data-base="{{ "/" | relURL }}" aria-label="像素小房间">
+        <div class="pr-phone">
+            <p class="pr-date">TODAY</p>
+            <p class="pr-hello">欢迎，访客。</p>
+            <ul>
+                <li>阿里：在家</li>
+                <li>丝瓜：照看南瓜中</li>
+                <li>南瓜：睡着了</li>
+            </ul>
+        </div>
+        <div class="pr-stage">
+            <div class="pr-titlebar"><span>Landoorthy 的房间</span><span>▸ LANDOORTHY</span></div>
+            <div class="pr-screen">
+                <canvas width="192" height="108" role="img" aria-label="像素风的小房间：白色小狗阿里穿着橙色背心站在书桌旁，银色大猫丝瓜趴在地毯上，怀里睡着金色小猫南瓜。"></canvas>
+                <p class="pr-tip" hidden></p>
+            </div>
+            <div class="pr-dialog" aria-live="polite"><span class="pr-name">阿里</span><p class="pr-text">你回来啦！今天丝瓜带着南瓜来串门了。</p></div>
+            <nav class="pr-menu" aria-label="房间里的家具">
+                {{ range .Site.Data.room }}<a href="{{ .url | relURL }}">{{ .name }} · {{ .what }}</a>{{ end }}
+                <button type="button" data-lamp>关灯</button>
+            </nav>
+        </div>
     </section>
 </div>
+<script src="{{ "js/pixel-room.js" | relURL }}" defer></script>

@@ -1,6 +1,6 @@
 baseURL = "https://landoorthy-sudo.github.io/"
 languageCode = "zh"
-title = "Landoorthy 与丝瓜的房间"
+title = "Landoorthy 的房间"
 theme = "hugo-theme-ladder"
 defaultContentLanguage = "zh"
 hasCJKLanguage = true
@@ -9,11 +9,11 @@ hasCJKLanguage = true
   unsafe = true  # 必须设置为 true，才能让 Markdown 里的 HTML 生效
 
 [params]
-  brand = "丝瓜的房间"
+  brand = "Landoorthy 的房间"
   author = "Landoorthy"
-  description = "Landoorthy 与小猫丝瓜的房间：写作、读书游戏，以及 AI 与技术。"
+  description = "Landoorthy 的房间：写作、读书游戏，以及 AI 与技术。小狗阿里在家，丝瓜和南瓜常来串门。"
   authorDescription = "CUHKSZ - SDS - 2028"
-  info = "写小说，也和大模型打交道。<br>欢迎来玩，随便看看，别踩到猫。"
+  info = "写小说，也和大模型打交道。<br>欢迎来玩，随便看看，别踩到猫和狗。"
   avatarURL = "images/avatar.png"
 
   # --- 社交链接（保持原样，因为它是数组格式） ---

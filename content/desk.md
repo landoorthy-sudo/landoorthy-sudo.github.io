@@ -1,7 +1,7 @@
 ---
 title: "写作"
 furniture: "🖋 书桌"
-description: "丝瓜最喜欢趴在键盘上。下面这些字，是趁它不在的时候写的。"
+description: "阿里总在书桌底下等我写完。下面这些字，是让它多等了很久写出来的。"
 layout: room
 url: "/desk/"
 ---
