@@ -11,6 +11,7 @@ hasCJKLanguage = true
 [params]
   brand = "主页"
   author = "Landoorthy"
+  description = "Landoorthy 的个人主页：统计学与数据科学、AI 工具与写作。"
   authorDescription = "CUHKSZ - SDS - 2028"
   info = "统计学 | 数据科学 | 产品主理人 <br> 🐱🙌 项目很普通，但是我的小猫很曼妙！"
   avatarURL = "images/avatar.png"
