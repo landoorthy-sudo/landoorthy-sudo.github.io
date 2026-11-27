@@ -1,0 +1,119 @@
+/* 房间里的其他页面：和首页一样的暗色像素风。覆盖 Ladder 主题的白底样式。 */
+:root {
+  --cy-bg: #0e0c1d;
+  --cy-panel: #1a1730;
+  --cy-panel-2: #221f3d;
+  --cy-line: #4a3f7a;
+  --cy-text: #e8e4ff;
+  --cy-dim: #9a92c8;
+  --cy-pink: #ff5fa2;
+  --cy-cyan: #5fe1ff;
+  --cy-gold: #ffcf6a;
+}
+
+body {
+  background-color: var(--cy-bg);
+  background-image: radial-gradient(#ffffff0d 1px, transparent 1px);
+  background-size: 4px 4px;
+  color: var(--cy-text);
+}
+::selection { background: var(--cy-pink); color: var(--cy-bg); }
+
+h1, h2, h3, h4, h5, h6 { color: #ffffff; }
+h2 { border-left: 4px solid var(--cy-pink); padding-left: 1rem; }
+h3 { color: var(--cy-gold); }
+a { color: var(--cy-cyan); }
+strong, b { color: #ffffff; }
+hr { border: 0; border-top: 2px dashed var(--cy-line); }
+
+/* 顶栏：像游戏菜单 */
+.navigation { height: auto; padding-top: 1.2rem; padding-bottom: 1.2rem; }
+.navigation a,
+.navigation span,
+.navigation i { color: var(--cy-text); }
+.navigation .navigation-brand {
+  padding: 0.2rem 1rem;
+  border: 2px solid var(--cy-line);
+  background: var(--cy-panel);
+  font-size: 1.5rem;
+}
+.navigation .navigation-brand::before { content: "◂ "; color: var(--cy-pink); }
+.navigation .navigation-brand:hover { border-color: var(--cy-cyan); color: var(--cy-cyan); text-decoration: none; }
+.navigation .navigation-list .navigation-item a.navigation-link,
+.navigation .navigation-list .navigation-item a { font-size: 1.5rem; }
+.navigation .navigation-menu a {
+  padding: 0.2rem 0.9rem;
+  border: 2px solid var(--cy-line);
+  background: var(--cy-panel);
+}
+.navigation .navigation-menu a:hover { border-color: var(--cy-cyan); color: var(--cy-cyan); }
+.navigation .menu-separator span { color: var(--cy-line); }
+.navigation .navigation-social svg { stroke: var(--cy-text); }
+.menu-button span { background-color: var(--cy-text) !important; }
+@media only screen and (max-width: 768px) {
+  .navigation .navigation-list { background-color: var(--cy-panel); border-color: var(--cy-line); }
+}
+
+/* 内容区：一块带标题栏的屏幕 */
+#content {
+  max-width: 82rem;
+  margin: 1rem auto 0;
+  background: var(--cy-panel);
+  border: 3px solid var(--cy-line);
+}
+#content::before {
+  content: "▸ LANDOORTHY 的房间";
+  display: block;
+  padding: 0.2rem 1.2rem;
+  background: var(--cy-line);
+  color: var(--cy-cyan);
+  font-family: monospace;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+}
+.blog-single,
+.blog-wrapper { padding: 1rem 2.4rem 2.4rem; }
+@media only screen and (max-width: 768px) {
+  #content { margin: 0.6rem; }
+  .blog-single,
+  .blog-wrapper { padding: 0.6rem 1.4rem 1.6rem; }
+}
+.blog-title h1 { color: #ffffff; }
+.blog-single small,
+.blog-card small { color: var(--cy-dim); }
+.blog-content a { color: var(--cy-cyan); box-shadow: 0 1px 0 var(--cy-cyan); }
+.blog-content a:hover { color: var(--cy-pink); box-shadow: 0 1px 0 var(--cy-pink); text-decoration: none; }
+.blog-content li::marker { color: var(--cy-pink); }
+.blog-content blockquote { margin: 1.5rem 0; padding: 0.4rem 1.2rem; border-left: 4px solid var(--cy-cyan); background: var(--cy-panel-2); color: var(--cy-dim); }
+.blog-content :not(pre) > code { padding: 0.1rem 0.4rem; background: var(--cy-panel-2); color: var(--cy-gold); border-radius: 0; }
+.blog-content pre { border: 2px solid var(--cy-line); border-radius: 0; }
+.blog-content table { border-collapse: collapse; }
+.blog-content th, .blog-content td { border: 1px solid var(--cy-line); padding: 0.4rem 0.8rem; }
+.blog-content th { background: var(--cy-panel-2); }
+
+/* 文章列表：一张张卡片 */
+.blog-card {
+  margin: 1.4rem 0;
+  padding: 1rem 1.6rem;
+  border: 2px solid var(--cy-line);
+  background: var(--cy-panel-2);
+}
+.blog-card:hover { border-color: var(--cy-cyan); }
+.blog-card h3 a { color: #ffffff; }
+
+/* 房间页的小字 */
+.room-page .room-sign { color: var(--cy-pink); font-family: monospace; }
+.room-page .room-lede { color: var(--cy-dim); }
+.room-back a {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  border: 2px solid var(--cy-line);
+  background: var(--cy-panel-2);
+  color: var(--cy-text);
+}
+.room-back a:hover { border-color: var(--cy-cyan); color: var(--cy-cyan); text-decoration: none; }
+
+.paginator a, .paginator span { color: var(--cy-text); }
+.footer, .footer a { color: var(--cy-dim); }
+.room-footer { color: var(--cy-pink); }
+.top-link svg { color: var(--cy-text); }

@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="{{ $styles.RelPermalink }}" integrity="{{ $styles.Data.Integrity }}" crossorigin="anonymous" media="screen" />
 
     <link rel="stylesheet" href="{{ "css/room.css" | relURL }}" />
+    <link rel="stylesheet" href="{{ "css/cyber.css" | relURL }}" />
+    <meta name="theme-color" content="#0e0c1d">
 
     {{ $highlight := resources.Get "scss/highlight/github-dark.min.css" | minify | fingerprint }}
     <link rel="stylesheet" href="{{ $highlight.RelPermalink }}" />

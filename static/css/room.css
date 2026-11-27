@@ -195,14 +195,19 @@ body.room-home {
   background: #0e0c1d;
   font-family: "LXGW WenKai", "PingFang SC", "Microsoft YaHei", sans-serif;
 }
-.room-home main { padding: 2rem; }
-.room-home .pixel-room { max-width: 120rem; margin: 0 auto; }
+.room-home main { padding: 1.2rem 2rem; }
+.room-home .pixel-room {
+  /* 按屏幕高度收缩，保证 100% 缩放时整个房间、对话框和菜单都能一屏看完 */
+  max-width: min(120rem, calc((100vh - 26rem) * 16 / 9 + 18rem));
+  max-width: min(120rem, calc((100dvh - 26rem) * 16 / 9 + 18rem));
+  margin: 0 auto;
+}
 .pr-about h1 { margin: 0.4rem 0 0.2rem; font-size: 2.4rem; color: #fff; }
 .pr-about p { margin: 0; font-size: 1.35rem; line-height: 1.7; color: var(--pr-dim); }
 .pr-links { margin: auto 0 0; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: 1.3rem; }
 .pr-links a { color: var(--pr-cyan); text-decoration: none; }
 .pr-links a:hover { text-decoration: underline; }
-.room-home-footer p { margin: 0 0 2rem; text-align: center; font-size: 1.25rem; color: #6f68a0; }
+.room-home-footer p { margin: 0 0 1rem; text-align: center; font-size: 1.25rem; color: #6f68a0; }
 @media only screen and (max-width: 760px) {
   .room-home main { padding: 0.6rem; }
   .room-home .pixel-room { margin: 0; }
