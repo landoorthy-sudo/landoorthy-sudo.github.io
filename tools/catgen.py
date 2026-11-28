@@ -49,9 +49,11 @@ def cat(W, H, head, body, ear, legs, tail, awake, tail_frame=0, small=False, for
                 sp.pix([(x, hy0 - ear + r)], 'g', 'c')
     sp.outline('o')
     # 头和身子之间描一条线，让脑袋更立体
-    for y in range(hy0, hy1 + 1):
-        if sp.get(hx1 + 1, y) not in ('.', 'o') and sp.get(hx1, y) != '.':
-            sp.put(hx1 + 1, y, 'o') if False else None
+    for y in range(hy0 + 2, hy1):
+        if sp.get(hx1 + 1, y) not in ('.', 'o'): sp.put(hx1 + 1, y, 'o')
+    for x in range(hx0 + 2, hx1):
+        if sp.get(x, hy1 + 1) not in ('.', 'o'): sp.put(x, hy1 + 1, 'o')
+    sp.put(hx1, hy1, 'o') if sp.get(hx1 + 1, hy1) not in ('.',) else None
     # 耳朵内侧粉色
     for side in (0, 1):
         x = hx0 + 2 if side == 0 else hx1 - 2
@@ -89,19 +91,20 @@ def cat(W, H, head, body, ear, legs, tail, awake, tail_frame=0, small=False, for
     return sp.rows()
 
 def sigua(state, frame=0):
-    W, H = 30, 20
-    head, body = (2, 4, 15, 14), (11, 8, 26, 16)
+    # 头 11×8，坐在身子最前面，只比身子往前探 1 像素
+    W, H = 25, 19
+    head, body = (2, 4, 12, 11), (3, 8, 21, 15)
     if state == 'sleep':
-        return cat(W, H, head, body, 3, [], 'down', False, frame)
-    legs = [(12, frame), (16, 1 - frame), (20, 1 - frame), (24, frame)]
-    return cat(W, H, head, body, 3, legs, 'up', True, frame)
+        return cat(W, H, head, body, 3, [], 'down', False, frame, small=True)
+    legs = [(5, frame), (9, 1 - frame), (14, 1 - frame), (18, frame)]
+    return cat(W, H, head, body, 3, legs, 'up', True, frame, small=True)
 
 def nangua(state, frame=0):
-    W, H = 24, 16
-    head, body = (2, 4, 12, 11), (8, 7, 20, 13)
+    W, H = 20, 15
+    head, body = (2, 4, 10, 10), (3, 7, 16, 12)
     if state == 'sleep':
         return cat(W, H, head, body, 3, [], 'down', False, frame, small=True, forehead='m')
-    legs = [(9, frame), (12, 1 - frame), (15, 1 - frame), (18, frame)]
+    legs = [(4, frame), (7, 1 - frame), (11, 1 - frame), (14, frame)]
     return cat(W, H, head, body, 3, legs, 'up', True, frame, small=True, forehead='m')
 
 def render(items, path, z=12):
