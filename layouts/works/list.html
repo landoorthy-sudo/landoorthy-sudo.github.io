@@ -3,48 +3,58 @@
 <article class="blog-single room-page works-page">
   <header class="blog-title">
     {{ with .Params.furniture }}<p class="room-sign">{{ . }}</p>{{ end }}
-    <h1>{{ .Title }}</h1>
+    <h1 class="nx-glitch" data-text="{{ .Title }}">{{ .Title }}</h1>
     {{ with .Description }}<p class="room-lede">{{ . }}</p>{{ end }}
+    <p class="nx-boot" aria-hidden="true">&gt; mount /landoorthy/works ... <b>OK</b> · {{ len site.Data.works }} DIRS FOUND<span class="cy-cursor">_</span></p>
   </header>
 
-  <nav class="wk-desktop" aria-label="作品集文件夹">
+  <nav class="nx-desktop" aria-label="作品集文件夹">
     {{ range $i, $d := site.Data.works }}
-    <a class="wk-folder" href="#dir-{{ $i }}">
-      <span class="wk-folder-icon" aria-hidden="true"></span>
-      <span class="wk-folder-name">{{ $d.dir }}</span>
-      <span class="wk-folder-sub">{{ $d.title }}</span>
+    {{ $n := 0 }}{{ range $d.groups }}{{ $n = add $n (len (where $pages "Params.group" .group)) }}{{ end }}
+    <a class="nx-folder c-{{ $d.color | default "cyan" }}" href="#dir-{{ $i }}">
+      <span class="nx-folder-id">DIR//0{{ add $i 1 }}</span>
+      <span class="nx-folder-icon" aria-hidden="true"><i></i></span>
+      <span class="nx-folder-name nx-glitch" data-text="{{ $d.title }}">{{ $d.title }}</span>
+      <span class="nx-folder-en">{{ $d.en }}</span>
+      <span class="nx-folder-foot"><span>{{ $n }} FILES</span><span class="nx-access">ACCESS ▸</span></span>
     </a>
     {{ end }}
   </nav>
 
   {{ range $i, $d := site.Data.works }}
-  <section class="wk-window" id="dir-{{ $i }}">
-    <div class="wk-titlebar">
-      <span>C:\LANDOORTHY\作品集\{{ $d.dir }}</span>
-      <span class="wk-dots" aria-hidden="true">▪ ▪ ▪</span>
+  <section class="nx-window c-{{ $d.color | default "cyan" }}" id="dir-{{ $i }}">
+    <div class="nx-bar">
+      <span>root@landoorthy:~/works/{{ $d.dir }}$ ls -la</span>
+      <span class="nx-led" aria-hidden="true"></span>
     </div>
-    <div class="wk-body">
+    <div class="nx-body">
       <h2>{{ $d.title }} <small>{{ $d.en }}</small></h2>
-      {{ with $d.note }}<p class="wk-note">{{ . }}</p>{{ end }}
+      {{ with $d.note }}<p class="nx-note">// {{ . }}</p>{{ end }}
+      <div class="nx-groups">
       {{ range $d.groups }}
       {{ $items := (where $pages "Params.group" .group).ByWeight }}
-      <div class="wk-group">
-        <h3><span aria-hidden="true">{{ .icon }}</span> {{ .title }} <span class="wk-count">{{ len $items }}</span></h3>
+      <div class="nx-group">
+        <h3><span aria-hidden="true">{{ .icon }}</span> {{ .title }} <span class="nx-count">[{{ printf "%02d" (len $items) }}]</span></h3>
         {{ if $items }}
-        <ul class="wk-files">
+        <ul class="nx-files">
           {{ range $items }}
           <li><a href="{{ .RelPermalink }}">
-            <span class="wk-file-title">{{ .Title }}</span>
-            {{ with .Params.meta }}<span class="wk-file-meta">{{ . }}</span>{{ end }}
-            {{ with .Params.summary }}<span class="wk-file-sum">{{ . }}</span>{{ end }}
+            <span class="nx-file-title">{{ .Title }}</span>
+            {{ with .Params.meta }}<span class="nx-file-meta">{{ . }}</span>{{ end }}
+            {{ with .Params.summary }}<span class="nx-file-sum">{{ . }}</span>{{ end }}
           </a></li>
           {{ end }}
         </ul>
         {{ else }}
-        <p class="wk-empty">&gt; 空文件夹，正在整理<span class="cy-cursor">_</span></p>
+        <div class="nx-slot" aria-label="空位，整理中">
+          <span class="nx-slot-tag">[ ENCRYPTED ]</span>
+          <span class="nx-slot-text">数据整理中</span>
+          <span class="nx-slot-bar" aria-hidden="true"><i></i></span>
+        </div>
         {{ end }}
       </div>
       {{ end }}
+      </div>
     </div>
   </section>
   {{ end }}

@@ -9,7 +9,7 @@
   </header>
   <section class="blog-content">{{ .Content }}</section>
   {{ with .Params.links }}
-  <p class="wk-links">{{ range . }}<a href="{{ .url }}" rel="noopener" target="_blank">{{ .name }} ↗</a>{{ end }}</p>
+  <p class="nx-links">{{ range . }}<a href="{{ .url }}" rel="noopener" target="_blank">{{ .name }} ↗</a>{{ end }}</p>
   {{ end }}
   <p class="room-back"><a href="{{ "/works/" | relURL }}">← 回到作品集</a></p>
 </article>

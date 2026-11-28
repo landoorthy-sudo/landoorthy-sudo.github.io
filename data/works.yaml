@@ -2,6 +2,7 @@
 - dir: "01_作品分析"
   title: "对已有作品的分析"
   en: "Analysis"
+  color: cyan
   note: "拆别人的故事，看它为什么好看。"
   groups:
     - group: worldbuilding
@@ -13,7 +14,8 @@
 - dir: "02_我的作品"
   title: "自己的作品"
   en: "My Work"
-  note: "笔名「日月下行」，主要在网易LOFTER和AO3。"
+  color: pink
+  note: "自己写的故事、论坛体和游戏策划。"
   groups:
     - group: serial
       title: "连载作品"
@@ -27,6 +29,7 @@
 - dir: "03_English_Portfolio"
   title: "英文商业作品集"
   en: "English Commercial Portfolio"
+  color: gold
   note: "Commercial writing in English."
   groups:
     - group: english
