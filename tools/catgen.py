@@ -1,9 +1,90 @@
 """生成首页像素房间里丝瓜和南瓜的像素图。
-运行：python3 tools/catgen.py，会输出 tools/cats.json 和预览图 tools/cats.png，
+风格：头和身子连成一个圆团子，豆豆眼、腮红，小短脚只露出一点点。
+运行：python3 tools/catgen.py，输出 tools/cats.json 和预览图 tools/cats.png，
 再把 cats.json 里的行粘进 static/js/pixel-room.js。"""
-import sys, json; sys.path.insert(0, 'tools')
+import json, sys, os
+sys.path.insert(0, os.path.dirname(__file__))
 from catgen_lib import Spr
 from PIL import Image
+
+SG = dict(o='#4e525c', g='#e0e3e8', s='#c6cad2', t='#a3a8b2', w='#fafaf7', p='#efaab6', e='#2a2a30', b='#f4b4c2')
+NG = dict(o='#6e4a2c', g='#ecb46a', s='#9a8a80', t='#c88a48', w='#f8e7c6', p='#efaab6', e='#2a2018', b='#f4a8a0')
+
+def blob(sp, W, H, bw, bh, awake, look=-1, forehead=None, feet=None, tail='up', tail_frame=0, ear=3):
+    """头朝左的猫团子：一个圆角面包形的身子 + 左边略高的圆脑袋 + 两只三角耳。
+    bw×bh：身子大小；feet：小短脚的 x 位置（None = 趴着不露脚）"""
+    top = ear                                   # 头顶所在行（上面留给耳朵）
+    bot = top + bh - 1                          # 身子底边
+    x0, x1 = 1, bw
+    # 圆角面包：超椭圆
+    cx, cy, a, b = (x0 + x1) / 2 + .5, top + 2 + (bh - 2) / 2, (x1 - x0 + 1) / 2, (bh - 2) / 2
+    for y in range(H):
+        for x in range(W):
+            dx, dy = abs((x + .5 - cx) / a), abs((y + .5 - cy) / b)
+            if dx ** 3 + dy ** 3 <= 1: sp.pix([(x, y)], 'g', 'c')
+    # 脑袋：左边一个略高的圆
+    hr = bh / 2 + 0.4
+    hcx, hcy = x0 + hr - 0.5, top + hr - 0.2
+    sp.ellipse(hcx, hcy, hr, hr, 'g', 'c')
+    # 三角耳：尖朝外，越往下越宽，内侧粉色
+    widths = [1, 3, 4, 5] if ear >= 3 else [1, 2, 3]
+    for side in (0, 1):
+        for r, wdt in enumerate(widths):
+            y = top - len(widths) + 1 + r
+            for k in range(wdt):
+                X = (x0 + 1 + k) if side == 0 else (int(hcx * 2 - x0 - 1) - k)
+                sp.pix([(X, y)], 'g', 'c')
+    ears = [(x0 + 2, top - len(widths) + 2), (x0 + 2, top - len(widths) + 3), (x0 + 3, top - len(widths) + 3)] if ear >= 3 else [(x0 + 2, top - 1)]
+    # 尾巴
+    tx = x1 + 1
+    if tail == 'up':
+        pts = [(tx - 1, bot - 4), (tx, bot - 5), (tx, bot - 6), (tx, bot - 7), (tx - tail_frame, bot - 8)]
+        for i, (x, y) in enumerate(pts): sp.pix([(x, y), (x + 1, y)], 't' if i % 2 else 'g', 'c')
+    else:  # 睡觉：尾巴贴地绕到身前
+        for i, x in enumerate(range(x1 - 8 - tail_frame, x1 + 2)):
+            sp.pix([(x, bot + 1)], 't' if i % 2 else 'g', 'c')
+    if feet:
+        for fx in feet: sp.pix([(fx, bot + 1), (fx + 1, bot + 1)], 'g', 'c')
+    sp.outline('o')
+    for (x, y) in ears:
+        for X in (x, int(hcx * 2) - x - 1):
+            if sp.get(X, y) == 'g': sp.put(X, y, 'p')
+    # 背上颜色深一点 + 几道条纹（只画在描边里面）
+    for y in range(H):
+        for x in range(W):
+            if sp.get(x, y) == 'g' and y <= top + 4 and x > hcx + hr - 1: sp.put(x, y, 's')
+    for x in range(int(hcx + hr) + 1, x1 - 1, 3):
+        for y in range(top + 2, top + 5):
+            if sp.get(x, y) in ('g', 's') and sp.get(x, y - 1) != '.': sp.put(x, y, 't'); 
+    fx = int(hcx) + look
+    if forehead == 'm':   # 南瓜：额头一小块灰棕色 + 中间一道纹
+        for x in (fx - 1, fx, fx + 1):
+            if sp.get(x, top) == 'g': sp.put(x, top, 's')
+        if sp.get(fx, top + 1) == 'g': sp.put(fx, top + 1, 't')
+    else:                 # 丝瓜：三道很淡的细纹
+        for x in (fx - 2, fx, fx + 2):
+            if sp.get(x, top) == 'g': sp.put(x, top, 't')
+    # 豆豆眼 + 腮红
+    ey = int(hcy)
+    L, R = fx - 2, fx + 3
+    if awake: sp.pix([(L, ey), (L, ey + 1), (R, ey), (R, ey + 1)], 'e')
+    else: sp.pix([(L - 1, ey + 1), (L, ey + 1), (R, ey + 1), (R + 1, ey + 1)], 'e')
+    sp.pix([(L - 1, ey + 2), (L, ey + 2), (R, ey + 2), (R + 1, ey + 2)], 'b')
+    return sp.rows()
+
+def sigua(state, frame=0):
+    W, H = 28, 17
+    if state == 'sleep':
+        return blob(Spr(W, H), W, H, 23, 12, False, look=0, tail='down', tail_frame=frame)
+    feet = [4, 9, 15, 20] if frame == 0 else [5, 10, 14, 19]
+    return blob(Spr(W, H), W, H, 23, 12, True, feet=feet, tail_frame=frame)
+
+def nangua(state, frame=0):
+    W, H = 20, 13
+    if state == 'sleep':
+        return blob(Spr(W, H), W, H, 16, 9, False, look=0, forehead='m', tail='down', tail_frame=frame, ear=2)
+    feet = [3, 7, 11, 14] if frame == 0 else [4, 8, 10, 13]
+    return blob(Spr(W, H), W, H, 16, 9, True, forehead='m', feet=feet, tail_frame=frame, ear=2)
 
 def render(items, path, z=12):
     W = sum(len(r[0]) for r, _ in items) + 4 * (len(items) + 1); H = max(len(r) for r, _ in items) + 8
@@ -16,107 +97,10 @@ def render(items, path, z=12):
                     im.paste(c, ((ox+x)*z, (4+y)*z, (ox+x+1)*z, (4+y+1)*z))
         ox += len(rows[0]) + 4
     im.save(path)
-SG = dict(o='#5a5e68', g='#dadde2', s='#b6bac2', t='#868b95', w='#fafaf7', p='#eaa2ad', n='#d98a8f', m='#8a6a70', e='#2a2a30', G='#a8bd6a', h='#ffffff', b='#f2bcc5')
-NG = dict(o='#6e4a2c', g='#e6ae66', s='#8f8178', t='#b98245', w='#f8e7c6', p='#eaa2ad', n='#c98070', m='#8a5a48', e='#2a2018', G='#7d8a5a', h='#ffffff', b='#f2b0a8')
-EYE_OPEN = ['.ee.', 'ehee', 'eGGe', '.GG.']
-EYE_SHUT = ['....', 'e..e', '.ee.', '....']
-
-def head(sp, hx, hy, W, H, awake, look=0, forehead_dark=False, tag='head'):
-    """W×H 的圆脸，左上角 hx,hy；look 让五官往左右偏一点（侧身走路时）"""
-    sp.ellipse(hx + W/2, hy + H/2 + 0.6, W/2, H/2 - 0.2, 'g', tag)
-    # 大耳朵：尖尖的三角形，内侧粉色
-    for side in (0, 1):
-        for r in range(5):
-            lo, hi = 1 + max(0, (4 - r) // 2 - 1), 1 + r + 1
-            for x in range(lo, hi + 1):
-                X = hx + x if side == 0 else hx + W - 1 - x
-                sp.pix([(X, hy + r - 2)], 'g', tag)
-        for (x, y) in ((2, 0), (3, 1), (2, 1), (3, 2), (4, 2)):
-            X = hx + x if side == 0 else hx + W - 1 - x
-            sp.put(X, hy + y, 'p')
-    cx = hx + W // 2 + look
-    if forehead_dark:  # 南瓜：额头一片灰棕色，带 M 字纹
-        for y in range(hy + 1, hy + 4):
-            for x in range(cx - 3 + (y - hy), cx + 3 - (y - hy)):
-                if sp.get(x, y) == 'g': sp.put(x, y, 's')
-        sp.pix([(cx - 1, hy + 2), (cx, hy + 2), (cx - 1, hy + 3), (cx, hy + 3)], 't')
-    else:  # 丝瓜：额头几道细细的条纹
-        sp.pix([(cx - 1, hy + 2), (cx, hy + 2), (cx - 2, hy + 3), (cx + 1, hy + 3), (cx - 1, hy + 4), (cx, hy + 4)], 't')
-    ey = hy + H // 2 - 1
-    for ex in (cx - 6, cx + 2):
-        for y, row in enumerate(EYE_OPEN if awake else EYE_SHUT):
-            for x, c in enumerate(row):
-                if c != '.': sp.put(ex + x, ey + y, c)
-    # 白色的嘴套
-    for y in range(ey + 3, hy + H):
-        for x in range(cx - 4, cx + 4):
-            dx = (x + .5 - cx) / 4; dy = (y + .5 - (ey + 5)) / 2.6
-            if dx * dx + dy * dy <= 1 and sp.get(x, y) == 'g': sp.put(x, y, 'w')
-    sp.pix([(cx - 1, ey + 4), (cx, ey + 4)], 'n')
-    pass  # 不画嘴，只留粉鼻子
-    sp.pix([(cx - 7, ey + 4), (cx + 6, ey + 4)], 'b')
-
-def finish(sp, head_tag='head'):
-    sp.outline('o')
-    sp.outline('o', tag=head_tag, against={'body', 'paw', 'tail', 'leg'})
-    return sp
-
-def sigua_lying(awake=False, tail_up=False):
-    sp = Spr(32, 18)
-    shade = lambda x, y: 's' if y < 8 else ('w' if y > 15 else 'g')
-    sp.ellipse(20, 11.5, 11.5, 6.4, shade, 'body')
-    # 带深色环纹的尾巴，绕在身前
-    for x in range(12, 31):
-        sp.pix([(x, 16)], 't' if x % 3 == 0 else 'g', 'tail')
-    sp.pix([(11, 15 if tail_up else 16), (12, 15)], 'g', 'tail')
-    sp.ellipse(4, 16.3, 2.8, 1.5, 'w', 'paw'); sp.ellipse(12, 16.3, 2.8, 1.5, 'w', 'paw')
-    sp.outline('o')
-    head(sp, 0, 2, 16, 13, awake)
-    finish(sp)
-    sp.pix([(3, 17), (12, 17)], 'p') if False else None
-    return sp.rows()
-
-def sigua_walk(frame):
-    sp = Spr(32, 20)
-    shade = lambda x, y: 's' if y < 9 else ('w' if y > 13 else 'g')
-    sp.ellipse(19, 11, 10.5, 5.2, shade, 'body')
-    # 竖起来的环纹尾巴
-    for i, (x, y) in enumerate([(29, 9), (30, 8), (30, 7), (30, 6), (30, 5), (29, 4), (29, 3), (28, 2)]):
-        sp.pix([(x, y), (x + 1, y)], 't' if i % 3 == 1 else 'g', 'tail')
-    legs = [(11, 0), (15, 1), (22, 1), (26, 0)] if frame else [(11, 1), (15, 0), (22, 0), (26, 1)]
-    for lx, up in legs:
-        for y in range(14, 19 - up): sp.pix([(lx - 1, y), (lx, y), (lx + 1, y)], 'g' if y < 16 - up else 'w', 'leg')
-    sp.outline('o')
-    head(sp, 0, 1, 16, 14, True, look=-1)
-    finish(sp)
-    return sp.rows()
-
-def nangua_curl():
-    sp = Spr(20, 13)
-    shade = lambda x, y: ('t' if x % 3 == 0 and y < 7 else 'g') if y < 10 else 'w'
-    sp.ellipse(12.5, 7.5, 7.3, 4.8, shade, 'body')
-    for x in range(7, 19): sp.pix([(x, 11)], 't' if x % 3 == 0 else 'g', 'tail')
-    sp.outline('o')
-    head(sp, 0, 1, 12, 11, False, forehead_dark=True)
-    finish(sp)
-    return sp.rows()
-
-def nangua_walk(frame):
-    sp = Spr(22, 15)
-    shade = lambda x, y: ('t' if x % 3 == 0 and y < 8 else 'g') if y < 10 else 'w'
-    sp.ellipse(13.5, 8, 7.2, 3.8, shade, 'body')
-    for i, (x, y) in enumerate([(20, 7), (20, 6), (21, 5), (21, 4), (20, 3)]):
-        sp.pix([(x, y)], 't' if i % 2 else 'g', 'tail')
-    legs = [(9, 0), (16, 1)] if frame else [(9, 1), (16, 0)]
-    for lx, up in legs:
-        for y in range(11, 14 - up): sp.pix([(lx - 1, y), (lx, y), (lx + 1, y)], 'g', 'leg')
-    sp.outline('o')
-    head(sp, 0, 0, 12, 11, True, look=-1, forehead_dark=True)
-    finish(sp)
-    return sp.rows()
 
 if __name__ == '__main__':
-    out = dict(sigua_sleep=sigua_lying(False), sigua_sleep2=sigua_lying(False, True), sigua_walk0=sigua_walk(0), sigua_walk1=sigua_walk(1),
-               nangua_curl=nangua_curl(), nangua_walk0=nangua_walk(0), nangua_walk1=nangua_walk(1))
-    json.dump(out, open('tools/cats.json', 'w'))
-    render([(out['sigua_sleep'], SG), (out['sigua_walk0'], SG), (out['nangua_curl'], NG), (out['nangua_walk0'], NG)], 'tools/cats.png', z=12)
+    here = os.path.dirname(os.path.abspath(__file__))
+    out = dict(sigua_sleep=sigua('sleep', 0), sigua_sleep2=sigua('sleep', 1), sigua_walk0=sigua('walk', 0), sigua_walk1=sigua('walk', 1),
+               nangua_curl=nangua('sleep', 0), nangua_walk0=nangua('walk', 0), nangua_walk1=nangua('walk', 1))
+    json.dump(out, open(os.path.join(here, 'cats.json'), 'w'))
+    render([(out['sigua_sleep'], SG), (out['sigua_walk0'], SG), (out['sigua_walk1'], SG), (out['nangua_curl'], NG), (out['nangua_walk0'], NG)], os.path.join(here, 'cats.png'))
