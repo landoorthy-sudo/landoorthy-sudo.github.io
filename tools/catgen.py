@@ -1,5 +1,6 @@
-"""生成首页像素房间里丝瓜和南瓜的像素图。
-风格：头和身子连成一个圆团子，豆豆眼、腮红，小短脚只露出一点点。
+"""生成首页像素房间里丝瓜和南瓜的像素图（横版侧身小猫）。
+结构：宽宽的圆角方脑袋，两只耳朵分在头顶两角；身子比头低一点、跟在后面；
+小短腿；尾巴高高翘起打个弯。豆豆眼、腮红、小胡子。
 运行：python3 tools/catgen.py，输出 tools/cats.json 和预览图 tools/cats.png，
 再把 cats.json 里的行粘进 static/js/pixel-room.js。"""
 import json, sys, os
@@ -7,84 +8,101 @@ sys.path.insert(0, os.path.dirname(__file__))
 from catgen_lib import Spr
 from PIL import Image
 
-SG = dict(o='#4e525c', g='#e0e3e8', s='#c6cad2', t='#a3a8b2', w='#fafaf7', p='#efaab6', e='#2a2a30', b='#f4b4c2')
-NG = dict(o='#6e4a2c', g='#ecb46a', s='#9a8a80', t='#c88a48', w='#f8e7c6', p='#efaab6', e='#2a2018', b='#f4a8a0')
+SG = dict(o='#4e525c', g='#e0e3e8', s='#c4c8d0', t='#9ea3ad', w='#fafaf7', p='#efaab6', e='#2a2a30', b='#f4b4c2', n='#d98a9a')
+NG = dict(o='#6e4a2c', g='#ecb46a', s='#a08a76', t='#c8873f', w='#f8e7c6', p='#efaab6', e='#2a2018', b='#f4a8a0', n='#b8705a')
 
-def blob(sp, W, H, bw, bh, awake, look=-1, forehead=None, feet=None, tail='up', tail_frame=0, ear=3):
-    """头朝左的猫团子：一个圆角面包形的身子 + 左边略高的圆脑袋 + 两只三角耳。
-    bw×bh：身子大小；feet：小短脚的 x 位置（None = 趴着不露脚）"""
-    top = ear                                   # 头顶所在行（上面留给耳朵）
-    bot = top + bh - 1                          # 身子底边
-    x0, x1 = 1, bw
-    # 圆角面包：超椭圆
-    cx, cy, a, b = (x0 + x1) / 2 + .5, top + 2 + (bh - 2) / 2, (x1 - x0 + 1) / 2, (bh - 2) / 2
-    for y in range(H):
-        for x in range(W):
-            dx, dy = abs((x + .5 - cx) / a), abs((y + .5 - cy) / b)
-            if dx ** 3 + dy ** 3 <= 1: sp.pix([(x, y)], 'g', 'c')
-    # 脑袋：左边一个略高的圆
-    hr = bh / 2 + 0.4
-    hcx, hcy = x0 + hr - 0.5, top + hr - 0.2
-    sp.ellipse(hcx, hcy, hr, hr, 'g', 'c')
-    # 三角耳：尖朝外，越往下越宽，内侧粉色
-    widths = [1, 3, 4, 5] if ear >= 3 else [1, 2, 3]
-    for side in (0, 1):
-        for r, wdt in enumerate(widths):
-            y = top - len(widths) + 1 + r
-            for k in range(wdt):
-                X = (x0 + 1 + k) if side == 0 else (int(hcx * 2 - x0 - 1) - k)
-                sp.pix([(X, y)], 'g', 'c')
-    ears = [(x0 + 2, top - len(widths) + 2), (x0 + 2, top - len(widths) + 3), (x0 + 3, top - len(widths) + 3)] if ear >= 3 else [(x0 + 2, top - 1)]
-    # 尾巴
-    tx = x1 + 1
+def rrect(sp, x0, y0, x1, y1, r, c='g', tag='c'):
+    for y in range(y0, y1 + 1):
+        for x in range(x0, x1 + 1):
+            dx = max(x0 + r - x, 0, x - (x1 - r)); dy = max(y0 + r - y, 0, y - (y1 - r))
+            if dx * dx + dy * dy <= r * r + 0.5: sp.pix([(x, y)], c, tag)
+
+def cat(W, H, head, body, ear, legs, tail, awake, tail_frame=0, small=False, forehead='lines'):
+    sp = Spr(W, H)
+    hx0, hy0, hx1, hy1 = head
+    bx0, by0, bx1, by1 = body
+    # 尾巴（先画，被身子盖住根部）
     if tail == 'up':
-        pts = [(tx - 1, bot - 4), (tx, bot - 5), (tx, bot - 6), (tx, bot - 7), (tx - tail_frame, bot - 8)]
-        for i, (x, y) in enumerate(pts): sp.pix([(x, y), (x + 1, y)], 't' if i % 2 else 'g', 'c')
+        tx = bx1 - 2
+        top_y = by0 - (5 if small else 7)
+        pts = [(tx + (1 if y < by0 - 2 else 0), y) for y in range(by0 + 2, top_y, -1)]
+        for i, (x, y) in enumerate(pts):
+            sp.pix([(x, y), (x + 1, y), (x + 2, y)], 't' if i % 3 == 2 else 'g', 'c')
+        sp.pix([(tx - tail_frame, top_y), (tx + 1 - tail_frame, top_y), (tx + 2, top_y)], 'g', 'c')
     else:  # 睡觉：尾巴贴地绕到身前
-        for i, x in enumerate(range(x1 - 8 - tail_frame, x1 + 2)):
-            sp.pix([(x, bot + 1)], 't' if i % 2 else 'g', 'c')
-    if feet:
-        for fx in feet: sp.pix([(fx, bot + 1), (fx + 1, bot + 1)], 'g', 'c')
+        for i, x in enumerate(range(bx0 + 1 - tail_frame, bx1 + 2)):
+            sp.pix([(x, by1 + 1)], 't' if i % 2 else 'g', 'c')
+        sp.pix([(bx1 + 1, by1), (bx1 + 1, by1 + 1)], 'g', 'c')
+    rrect(sp, bx0, by0, bx1, by1, 2)
+    # 小短腿
+    for lx, up in legs:
+        for y in range(by1 - 1, by1 + 3 - up):
+            sp.pix([(lx, y), (lx + 1, y)], 'g', 'c')
+    rrect(sp, hx0, hy0, hx1, hy1, 2 if not small else 2)
+    # 两只耳朵分在头顶两角
+    for side in (0, 1):
+        ex = hx0 + 1 if side == 0 else hx1 - 1 - (ear - 1)
+        for r in range(ear):
+            # 第 r 行（从耳尖往下），宽度 r+1，尖朝外
+            for k in range(r + 1 + (1 if r == ear - 1 else 0)):
+                x = (hx0 + 1 + k) if side == 0 else (hx1 - 1 - k)
+                sp.pix([(x, hy0 - ear + r)], 'g', 'c')
     sp.outline('o')
-    for (x, y) in ears:
-        for X in (x, int(hcx * 2) - x - 1):
-            if sp.get(X, y) == 'g': sp.put(X, y, 'p')
-    # 背上颜色深一点 + 几道条纹（只画在描边里面）
-    for y in range(H):
-        for x in range(W):
-            if sp.get(x, y) == 'g' and y <= top + 4 and x > hcx + hr - 1: sp.put(x, y, 's')
-    for x in range(int(hcx + hr) + 1, x1 - 1, 3):
-        for y in range(top + 2, top + 5):
-            if sp.get(x, y) in ('g', 's') and sp.get(x, y - 1) != '.': sp.put(x, y, 't'); 
-    fx = int(hcx) + look
-    if forehead == 'm':   # 南瓜：额头一小块灰棕色 + 中间一道纹
-        for x in (fx - 1, fx, fx + 1):
-            if sp.get(x, top) == 'g': sp.put(x, top, 's')
-        if sp.get(fx, top + 1) == 'g': sp.put(fx, top + 1, 't')
-    else:                 # 丝瓜：三道很淡的细纹
-        for x in (fx - 2, fx, fx + 2):
-            if sp.get(x, top) == 'g': sp.put(x, top, 't')
-    # 豆豆眼 + 腮红
-    ey = int(hcy)
-    L, R = fx - 2, fx + 3
-    if awake: sp.pix([(L, ey), (L, ey + 1), (R, ey), (R, ey + 1)], 'e')
-    else: sp.pix([(L - 1, ey + 1), (L, ey + 1), (R, ey + 1), (R + 1, ey + 1)], 'e')
-    sp.pix([(L - 1, ey + 2), (L, ey + 2), (R, ey + 2), (R + 1, ey + 2)], 'b')
+    # 头和身子之间描一条线，让脑袋更立体
+    for y in range(hy0, hy1 + 1):
+        if sp.get(hx1 + 1, y) not in ('.', 'o') and sp.get(hx1, y) != '.':
+            sp.put(hx1 + 1, y, 'o') if False else None
+    # 耳朵内侧粉色
+    for side in (0, 1):
+        x = hx0 + 2 if side == 0 else hx1 - 2
+        for y in (hy0 - 1, hy0):
+            if sp.get(x, y) == 'g': sp.put(x, y, 'p')
+    # 背上颜色深一点 + 条纹
+    for y in range(by0 + 1, by0 + 3):
+        for x in range(hx1 + 1, bx1):
+            if sp.get(x, y) == 'g': sp.put(x, y, 's')
+    for x in range(hx1 + 2, bx1 - 1, 3):
+        for y in range(by0 + 1, by0 + 4):
+            if sp.get(x, y) in ('g', 's'): sp.put(x, y, 't')
+    # 额头花纹
+    mid = (hx0 + hx1) // 2
+    if forehead == 'lines':
+        for x in (mid - 2, mid, mid + 2):
+            for y in (hy0 + 1, hy0 + 2):
+                if sp.get(x, y) == 'g': sp.put(x, y, 't')
+    else:  # 南瓜：额头一小块灰棕色
+        for x in range(mid - 1, mid + 2):
+            if sp.get(x, hy0 + 1) == 'g': sp.put(x, hy0 + 1, 's')
+        sp.put(mid, hy0 + 2, 's')
+    # 脸：豆豆眼、鼻子、腮红、胡子
+    ey = hy0 + (3 if small else 4)
+    L, R = hx0 + 2, hx1 - 2
+    if awake:
+        sp.pix([(L, ey), (L, ey + 1), (R, ey), (R, ey + 1)], 'e')
+    else:
+        sp.pix([(L - 1, ey + 1), (L, ey + 1), (R, ey + 1), (R + 1, ey + 1)], 'e')
+    sp.pix([(mid, ey + 2)], 'n')
+    if not small: sp.pix([(mid - 1, ey + 3), (mid + 1, ey + 3)], 'o')
+    sp.pix([(L - 1, ey + 2), (R + 1, ey + 2)], 'b')
+    for y in (ey + 1, ey + 3) if not small else (ey + 1,):
+        sp.pix([(hx0 - 2, y), (hx0 - 1, y)], 'o')       # 左边的胡子伸出脸外
     return sp.rows()
 
 def sigua(state, frame=0):
-    W, H = 28, 17
+    W, H = 30, 20
+    head, body = (2, 4, 15, 14), (11, 8, 26, 16)
     if state == 'sleep':
-        return blob(Spr(W, H), W, H, 23, 12, False, look=0, tail='down', tail_frame=frame)
-    feet = [4, 9, 15, 20] if frame == 0 else [5, 10, 14, 19]
-    return blob(Spr(W, H), W, H, 23, 12, True, feet=feet, tail_frame=frame)
+        return cat(W, H, head, body, 3, [], 'down', False, frame)
+    legs = [(12, frame), (16, 1 - frame), (20, 1 - frame), (24, frame)]
+    return cat(W, H, head, body, 3, legs, 'up', True, frame)
 
 def nangua(state, frame=0):
-    W, H = 20, 13
+    W, H = 24, 16
+    head, body = (2, 4, 12, 11), (8, 7, 20, 13)
     if state == 'sleep':
-        return blob(Spr(W, H), W, H, 16, 9, False, look=0, forehead='m', tail='down', tail_frame=frame, ear=2)
-    feet = [3, 7, 11, 14] if frame == 0 else [4, 8, 10, 13]
-    return blob(Spr(W, H), W, H, 16, 9, True, forehead='m', feet=feet, tail_frame=frame, ear=2)
+        return cat(W, H, head, body, 3, [], 'down', False, frame, small=True, forehead='m')
+    legs = [(9, frame), (12, 1 - frame), (15, 1 - frame), (18, frame)]
+    return cat(W, H, head, body, 3, legs, 'up', True, frame, small=True, forehead='m')
 
 def render(items, path, z=12):
     W = sum(len(r[0]) for r, _ in items) + 4 * (len(items) + 1); H = max(len(r) for r, _ in items) + 8
