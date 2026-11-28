@@ -1,0 +1,27 @@
+{{ define "content" }}
+<div class="blog-wrapper room-page">
+  <header class="blog-title">
+    <p class="room-sign">🖋 书桌</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p class="room-lede">{{ . }}</p>{{ end }}
+  </header>
+  <div class="blog-list">
+    {{ range .Paginator.Pages }}
+    <article>
+      <div class="blog-card">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        {{ partial "blog/meta.html" . }}
+        {{ .Summary }}
+      </div>
+    </article>
+    {{ end -}}
+  </div>
+  {{ if gt .Paginator.TotalPages 1 }}
+  <div class="paginator">
+    {{ if .Paginator.HasPrev }}<a class="prev" href="{{ .Paginator.Prev.URL }}">&larr; 上一页</a>{{ end }}
+    {{ if .Paginator.HasNext }}<a class="next" href="{{ .Paginator.Next.URL }}">下一页 &rarr;</a>{{ end }}
+  </div>
+  {{ end }}
+  <p class="room-back"><a href="{{ "/" | relURL }}">← 回到房间</a></p>
+</div>
+{{ end }}

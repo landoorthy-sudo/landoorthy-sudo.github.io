@@ -290,9 +290,9 @@
   // ---------- 互动 ----------
   const places = [
     { id: 'lamp', x: 112, y: 49, w: 9, h: 14, label: '台灯 · 开关' },
-    { id: 'laptop', x: 86, y: 51, w: 20, h: 12, label: '电脑 · AI 与技术', href: '/notes/' },
-    { id: 'desk', x: 62, y: 58, w: 66, h: 20, label: '书桌 · 写作', href: '/desk/' },
-    { id: 'shelf', x: 134, y: 18, w: 24, h: 70, label: '书架 · 读书 游戏 影视', href: '/shelf/' },
+    { id: 'laptop', x: 86, y: 51, w: 20, h: 12, label: '电脑 · 作品集', href: '/works/' },
+    { id: 'desk', x: 62, y: 58, w: 66, h: 20, label: '书桌 · 技术笔记', href: '/notes/' },
+    { id: 'shelf', x: 134, y: 18, w: 24, h: 70, label: '书架 · 书影音', href: '/shelf/' },
     { id: 'door', x: 166, y: 28, w: 22, h: 46, label: '门 · 关于我', href: '/about/' },
     { id: 'window', x: 8, y: 4, w: 46, h: 40, label: '窗外' }
   ];

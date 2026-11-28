@@ -1,0 +1,16 @@
+{{ define "content" }}
+{{ $kind := .Params.group }}{{ $label := "" }}{{ $dir := "" }}
+{{ range site.Data.works }}{{ $d := . }}{{ range .groups }}{{ if eq .group $kind }}{{ $label = .title }}{{ $dir = $d.dir }}{{ end }}{{ end }}{{ end }}
+<article class="blog-single room-page works-page">
+  <header class="blog-title">
+    <p class="room-sign">💻 作品集 / {{ $dir }}{{ with $label }} / {{ . }}{{ end }}</p>
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.meta }}<p class="room-lede">{{ . }}</p>{{ end }}
+  </header>
+  <section class="blog-content">{{ .Content }}</section>
+  {{ with .Params.links }}
+  <p class="nx-links">{{ range . }}<a href="{{ .url }}" rel="noopener" target="_blank">{{ .name }} ↗</a>{{ end }}</p>
+  {{ end }}
+  <p class="room-back"><a href="{{ "/works/" | relURL }}">← 回到作品集</a></p>
+</article>
+{{ end }}
