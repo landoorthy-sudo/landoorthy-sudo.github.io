@@ -8,8 +8,8 @@ sys.path.insert(0, os.path.dirname(__file__))
 from catgen_lib import Spr
 from PIL import Image
 
-SG = dict(o='#4e525c', g='#e0e3e8', s='#c4c8d0', t='#9ea3ad', w='#fafaf7', p='#efaab6', e='#2a2a30', b='#f4b4c2', n='#d98a9a')
-NG = dict(o='#6e4a2c', g='#ecb46a', s='#a08a76', t='#c8873f', w='#f8e7c6', p='#efaab6', e='#2a2018', b='#f4a8a0', n='#b8705a')
+SG = dict(q='#9da2ac', o='#4e525c', g='#e0e3e8', s='#c4c8d0', t='#9ea3ad', w='#fafaf7', p='#efaab6', e='#2a2a30', b='#f4b4c2', n='#d98a9a')
+NG = dict(q='#b98a56', o='#6e4a2c', g='#ecb46a', s='#a08a76', t='#c8873f', w='#f8e7c6', p='#efaab6', e='#2a2018', b='#f4a8a0', n='#b8705a')
 
 def rrect(sp, x0, y0, x1, y1, r, c='g', tag='c'):
     for y in range(y0, y1 + 1):
@@ -43,17 +43,17 @@ def cat(W, H, head, body, ear, legs, tail, awake, tail_frame=0, small=False, for
     for side in (0, 1):
         ex = hx0 + 1 if side == 0 else hx1 - 1 - (ear - 1)
         for r in range(ear):
-            # 第 r 行（从耳尖往下），宽度 r+1，尖朝外
+            # 三角耳：第 r 行（从耳尖往下）宽 r+1，尖朝外；边缘之后会换成浅色
             for k in range(r + 1 + (1 if r == ear - 1 else 0)):
                 x = (hx0 + 1 + k) if side == 0 else (hx1 - 1 - k)
                 sp.pix([(x, hy0 - ear + r)], 'g', 'c')
     sp.outline('o')
-    # 头和身子之间描一条线，让脑袋更立体
-    for y in range(hy0 + 2, hy1):
-        if sp.get(hx1 + 1, y) not in ('.', 'o'): sp.put(hx1 + 1, y, 'o')
-    for x in range(hx0 + 2, hx1):
-        if sp.get(x, hy1 + 1) not in ('.', 'o'): sp.put(x, hy1 + 1, 'o')
-    sp.put(hx1, hy1, 'o') if sp.get(hx1 + 1, hy1) not in ('.',) else None
+    # 耳朵：边缘用浅一点的颜色，看起来软一些（不像松鼠的簇毛）
+    for y in range(0, hy0):
+        for x in range(W):
+            if sp.get(x, y) == 'o': sp.put(x, y, 'q')
+    for x in (hx0, hx1):   # 耳根两侧也柔一点
+        if sp.get(x, hy0) == 'o': sp.put(x, hy0, 'q')
     # 耳朵内侧粉色
     for side in (0, 1):
         x = hx0 + 2 if side == 0 else hx1 - 2
