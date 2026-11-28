@@ -126,7 +126,7 @@ hr { border: 0; border-top: 2px dashed var(--cy-line); }
 
 /* ---------- 书架：字雨引文（一条细横幅） ---------- */
 .mx-hero {
-  position: relative; margin: 1.6rem 0 2.4rem; height: 9rem; overflow: hidden;
+  position: relative; margin: 1.6rem 0 2.4rem; height: 12rem; overflow: hidden;
   background: #0a0918; border: 2px solid #1f6b46; cursor: pointer; outline: none;
   box-shadow: 0 0 18px #39ff8822 inset;
 }
@@ -134,18 +134,18 @@ hr { border: 0; border-top: 2px dashed var(--cy-line); }
 .mx-hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .mx-quote {
   position: absolute; inset: 0; margin: 0; padding: 0 1.6rem; border: 0; background: none;
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.4rem 1.4rem;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem;
   pointer-events: none;
 }
 .mx-line, .mx-src { margin: 0; pointer-events: auto; }
 .mx-line span, .mx-src span { display: inline-block; min-width: 0.5em; transition: color 0.3s, text-shadow 0.3s; }
-.mx-main { font-size: 2.6rem; letter-spacing: 0.2em; color: #eafff2; font-weight: 700;
+.mx-main { font-size: 2.3rem; letter-spacing: 0.16em; color: #eafff2; font-weight: 700;
   text-shadow: 0 0 6px #39ff88, 0 0 16px #39ff8877; background: #0a0918d9; padding: 0 0.8rem; }
 .mx-src { font-size: 1.3rem; color: var(--cy-pink); background: #0a0918d9; padding: 0 0.5rem; }
 .mx-quote span.scr { color: #39ff88; opacity: 0.7; text-shadow: none; }
 .mx-quote span.flash { animation: mx-flash 0.6s ease-out; }
 @keyframes mx-flash { 0% { color: #fff; text-shadow: 0 0 16px #5fe1ff, 0 0 30px #5fe1ff; } }
-@media only screen and (max-width: 600px) { .mx-hero { height: 8rem; } .mx-main { font-size: 2rem; letter-spacing: 0.12em; } }
+@media only screen and (max-width: 600px) { .mx-hero { height: 10rem; } .mx-main { font-size: 1.6rem; letter-spacing: 0.06em; padding: 0 0.4rem; } }
 
 /* ---------- 电脑 · 作品集：赛博朋克终端 ---------- */
 .c-cyan { --nc: #5fe1ff; --nc2: #1d6b80; } .c-pink { --nc: #ff5fa2; --nc2: #8a2456; } .c-gold { --nc: #ffcf6a; --nc2: #8a6a22; }

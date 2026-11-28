@@ -1,9 +1,9 @@
 # 电脑里的三个文件夹。每个作品是 content/works/ 下的一个 .md，用 group 决定放进哪一格。
-- dir: "01_作品分析"
-  title: "对已有作品的分析"
-  en: "Analysis"
+- dir: "01_IP拆解"
+  title: "IP 拆解"
+  en: "IP Breakdown"
   color: cyan
-  note: "拆别人的故事，看它为什么好看。"
+  note: "从世界观到人设，拆解成熟 IP 为什么能成立、为什么好看。"
   groups:
     - group: worldbuilding
       title: "世界观拆解"
@@ -11,11 +11,11 @@
     - group: character
       title: "人设分析"
       icon: "◉"
-- dir: "02_我的作品"
-  title: "自己的作品"
-  en: "My Work"
+- dir: "02_个人作品"
+  title: "个人作品"
+  en: "Original Work"
   color: pink
-  note: "自己写的故事、论坛体和游戏策划。"
+  note: "原创与同人连载、论坛体、游戏策划案。"
   groups:
     - group: serial
       title: "连载作品"
@@ -26,12 +26,12 @@
     - group: game
       title: "游戏策划案"
       icon: "▣"
-- dir: "03_English_Portfolio"
-  title: "英文商业作品集"
-  en: "English Commercial Portfolio"
+- dir: "03_商业作品"
+  title: "商业作品"
+  en: "Commercial Work"
   color: gold
-  note: "Commercial writing in English."
+  note: "商业项目中的写作、改编与内容策划。"
   groups:
     - group: english
-      title: "Selected Work"
+      title: "项目案例"
       icon: "◆"

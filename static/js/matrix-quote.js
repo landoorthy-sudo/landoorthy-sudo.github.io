@@ -8,7 +8,7 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const GLYPHS = ('ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789' +
-    '人无癖不可与之交以其深情也书影音读看听梦忆张岱').split('');
+    '人无癖疵不可与交以其深情真气也书影音读看听').split('');
   const pick = () => GLYPHS[(Math.random() * GLYPHS.length) | 0];
   const FONT = 16;
 
