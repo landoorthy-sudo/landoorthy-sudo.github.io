@@ -20,7 +20,7 @@ jobs:
       - name: Check key pages exist
         run: |
           grep -q pixel-room public/index.html
-          for p in index.html desk/index.html shelf/index.html about/index.html notes/index.html; do test -f "public/$p" || { echo "missing $p"; exit 1; }; done
+          for p in index.html works/index.html shelf/index.html about/index.html notes/index.html; do test -f "public/$p" || { echo "missing $p"; exit 1; }; done
       - uses: actions/upload-artifact@v4
         with:
           name: site-preview

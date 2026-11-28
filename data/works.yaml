@@ -1,0 +1,34 @@
+# 电脑里的三个文件夹。每个作品是 content/works/ 下的一个 .md，用 group 决定放进哪一格。
+- dir: "01_作品分析"
+  title: "对已有作品的分析"
+  en: "Analysis"
+  note: "拆别人的故事，看它为什么好看。"
+  groups:
+    - group: worldbuilding
+      title: "世界观拆解"
+      icon: "◈"
+    - group: character
+      title: "人设分析"
+      icon: "◉"
+- dir: "02_我的作品"
+  title: "自己的作品"
+  en: "My Work"
+  note: "笔名「日月下行」，主要在网易LOFTER和AO3。"
+  groups:
+    - group: serial
+      title: "连载作品"
+      icon: "▤"
+    - group: forum
+      title: "论坛体"
+      icon: "▦"
+    - group: game
+      title: "游戏策划案"
+      icon: "▣"
+- dir: "03_English_Portfolio"
+  title: "英文商业作品集"
+  en: "English Commercial Portfolio"
+  note: "Commercial writing in English."
+  groups:
+    - group: english
+      title: "Selected Work"
+      icon: "◆"

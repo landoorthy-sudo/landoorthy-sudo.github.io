@@ -1,0 +1,69 @@
+{{ define "content" }}
+{{ $types := partial "shelf-types.html" . }}
+<article class="blog-single room-page shelf-page">
+  <header class="blog-title">
+    {{ with .Params.furniture }}<p class="room-sign">{{ . }}</p>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p class="room-lede">{{ . }}</p>{{ end }}
+  </header>
+
+  <figure class="mx-hero" data-matrix tabindex="0" aria-label="张岱：人无癖不可与之交，以其无深情也。点击重新解码。">
+    <canvas aria-hidden="true"></canvas>
+    <blockquote class="mx-quote">
+      <p class="mx-line mx-main" data-text="人无癖不可与之交">人无癖不可与之交</p>
+      <p class="mx-line mx-sub" data-text="以其无深情也。">以其无深情也。</p>
+      <footer class="mx-src" data-text="—— 张岱《陶庵梦忆 · 祁止祥癖》">—— 张岱《陶庵梦忆 · 祁止祥癖》</footer>
+    </blockquote>
+    <figcaption class="mx-hint">移动鼠标拨开字雨 · 点击重新解码</figcaption>
+  </figure>
+
+  <section class="sh-section">
+    <h2>书影音 <small>// 每年一格</small></h2>
+    <div class="sh-years">
+      {{ range sort (where .Pages "Params.year" "!=" nil) "Params.year" "desc" }}
+      {{ $items := index site.Data.shelf (printf "y%s" .Params.year) | default slice }}
+      <a class="sh-year" href="{{ .RelPermalink }}">
+        <span class="sh-year-num">{{ .Params.year }}<span aria-hidden="true">'</span></span>
+        <span class="sh-mini" aria-hidden="true">
+          {{ range seq 12 }}
+          {{ $m := printf "%02d" . }}{{ $n := 0 }}
+          {{ range $items }}{{ if eq (substr (printf "%v" .date) 5 2) $m }}{{ $n = add $n 1 }}{{ end }}{{ end }}
+          <i class="lv{{ cond (gt $n 4) 4 $n }}" title="{{ . }} 月 · {{ $n }}"></i>
+          {{ end }}
+        </span>
+        <span class="sh-year-count">
+          {{ if $items }}
+          {{ range $k, $t := $types }}{{ $c := len (where $items "type" $k) }}{{ if $c }}<b class="t-{{ $k }}">{{ $t.name }} {{ $c }}</b>{{ end }}{{ end }}
+          {{ else }}格子还空着{{ end }}
+        </span>
+        <span class="sh-year-go">ENTER ▸</span>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="sh-section">
+    <h2>在读 <small>// NOW READING</small></h2>
+    {{ with site.Data.shelf.reading }}
+    <ul class="sh-reading">
+      {{ range . }}
+      <li>
+        <span class="sh-spine" aria-hidden="true"></span>
+        <span class="sh-reading-body">
+          <span><strong>《{{ .title }}》</strong>{{ with .creator }}<span class="sh-by"> · {{ . }}</span>{{ end }}</span>
+          {{ with .note }}<span class="sh-note">{{ . }}</span>{{ end }}
+          {{ with .progress }}<span class="sh-bar" role="img" aria-label="进度 {{ . }}%"><i style="width: {{ . }}%"></i></span>{{ end }}
+        </span>
+      </li>
+      {{ end }}
+    </ul>
+    {{ else }}
+    <p class="wk-empty">&gt; 这会儿没在读什么<span class="cy-cursor">_</span></p>
+    {{ end }}
+  </section>
+
+  {{ with .Content }}<section class="blog-content">{{ . }}</section>{{ end }}
+  <p class="room-back"><a href="{{ "/" | relURL }}">← 回到房间</a></p>
+</article>
+<script src="{{ "js/matrix-quote.js" | relURL }}" defer></script>
+{{ end }}

@@ -1,0 +1,55 @@
+{{ define "content" }}
+{{ $pages := .Pages }}
+<article class="blog-single room-page works-page">
+  <header class="blog-title">
+    {{ with .Params.furniture }}<p class="room-sign">{{ . }}</p>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{ with .Description }}<p class="room-lede">{{ . }}</p>{{ end }}
+  </header>
+
+  <nav class="wk-desktop" aria-label="作品集文件夹">
+    {{ range $i, $d := site.Data.works }}
+    <a class="wk-folder" href="#dir-{{ $i }}">
+      <span class="wk-folder-icon" aria-hidden="true"></span>
+      <span class="wk-folder-name">{{ $d.dir }}</span>
+      <span class="wk-folder-sub">{{ $d.title }}</span>
+    </a>
+    {{ end }}
+  </nav>
+
+  {{ range $i, $d := site.Data.works }}
+  <section class="wk-window" id="dir-{{ $i }}">
+    <div class="wk-titlebar">
+      <span>C:\LANDOORTHY\作品集\{{ $d.dir }}</span>
+      <span class="wk-dots" aria-hidden="true">▪ ▪ ▪</span>
+    </div>
+    <div class="wk-body">
+      <h2>{{ $d.title }} <small>{{ $d.en }}</small></h2>
+      {{ with $d.note }}<p class="wk-note">{{ . }}</p>{{ end }}
+      {{ range $d.groups }}
+      {{ $items := (where $pages "Params.group" .group).ByWeight }}
+      <div class="wk-group">
+        <h3><span aria-hidden="true">{{ .icon }}</span> {{ .title }} <span class="wk-count">{{ len $items }}</span></h3>
+        {{ if $items }}
+        <ul class="wk-files">
+          {{ range $items }}
+          <li><a href="{{ .RelPermalink }}">
+            <span class="wk-file-title">{{ .Title }}</span>
+            {{ with .Params.meta }}<span class="wk-file-meta">{{ . }}</span>{{ end }}
+            {{ with .Params.summary }}<span class="wk-file-sum">{{ . }}</span>{{ end }}
+          </a></li>
+          {{ end }}
+        </ul>
+        {{ else }}
+        <p class="wk-empty">&gt; 空文件夹，正在整理<span class="cy-cursor">_</span></p>
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+
+  {{ with .Content }}<section class="blog-content">{{ . }}</section>{{ end }}
+  <p class="room-back"><a href="{{ "/" | relURL }}">← 回到房间</a></p>
+</article>
+{{ end }}

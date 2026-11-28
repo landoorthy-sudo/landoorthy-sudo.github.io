@@ -25,21 +25,21 @@ hasCJKLanguage = true
 # --- 导航菜单：房间里的家具 ---
 
 [[menu.main]]
-  name = "书桌"
-  url = "/desk/"
+  name = "电脑 · 作品集"
+  url = "/works/"
   weight = 1
 
 [[menu.main]]
-  name = "书架"
+  name = "书架 · 读书"
   url = "/shelf/"
   weight = 2
 
 [[menu.main]]
-  name = "电脑"
+  name = "书桌 · 技术笔记"
   url = "/notes/"
   weight = 3
 
 [[menu.main]]
-  name = "关于"
+  name = "门牌 · 关于"
   url = "/about/"
   weight = 4

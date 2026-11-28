@@ -1,0 +1,90 @@
+{{ define "content" }}
+{{ $types := partial "shelf-types.html" . }}
+{{ $year := .Params.year }}
+{{ $items := index site.Data.shelf (printf "y%s" $year) | default slice }}
+{{ $years := sort (where .CurrentSection.Pages "Params.year" "!=" nil) "Params.year" }}
+<article class="blog-single room-page shelf-page shelf-year">
+  <header class="blog-title">
+    <p class="room-sign">📚 书架 / 书影音</p>
+    <h1 class="sh-year-title">{{ $year }}<span>'</span></h1>
+    <p class="sh-stats">
+      <b>{{ len $items }}</b> 部
+      {{ range $k, $t := $types }}{{ $c := len (where $items "type" $k) }}{{ if $c }}<span class="t-{{ $k }}">{{ $t.name }} {{ $c }}</span>{{ end }}{{ end }}
+    </p>
+  </header>
+
+  <nav class="sh-yearnav" aria-label="年份">
+    {{ range $years }}<a href="{{ .RelPermalink }}"{{ if eq .Params.year $year }} aria-current="page"{{ end }}>{{ .Params.year }}</a>{{ end }}
+  </nav>
+
+  <div class="sh-grid-wrap">
+    <div class="sh-grid" data-shelf-grid>
+      {{ range seq 12 }}
+      {{ $m := printf "%02d" . }}
+      <div class="sh-col">
+        <div class="sh-cells">
+          {{ range $i, $it := $items }}
+          {{ if eq (substr (printf "%v" $it.date) 5 2) $m }}
+          <button type="button" class="sh-cell t-{{ $it.type }} r{{ $it.rating | default 0 }}" data-i="{{ $i }}" aria-label="{{ $it.title }}"></button>
+          {{ end }}
+          {{ end }}
+        </div>
+        <span class="sh-month">{{ . }}月</span>
+      </div>
+      {{ end }}
+    </div>
+    <p class="sh-legend">
+      {{ range $k, $t := $types }}<span><i class="sh-cell t-{{ $k }} r5"></i>{{ $t.name }}</span>{{ end }}
+      <span class="sh-legend-r">颜色越亮，星越多</span>
+    </p>
+    <div class="sh-detail" data-shelf-detail aria-live="polite">
+      {{ if $items }}&gt; 点一个格子看看<span class="cy-cursor">_</span>{{ else }}&gt; 这一年的格子还空着<span class="cy-cursor">_</span>{{ end }}
+    </div>
+  </div>
+
+  {{ if $items }}
+  <section class="sh-section">
+    <h2>清单 <small>// LOG</small></h2>
+    <ol class="sh-log">
+      {{ range $i, $it := sort $items "date" }}
+      {{ $t := index $types $it.type }}
+      <li class="t-{{ $it.type }}">
+        <span class="sh-log-date">{{ substr (printf "%v" $it.date) 0 7 }}</span>
+        <span class="sh-tag">{{ with $t }}{{ .name }}{{ else }}{{ $it.type }}{{ end }}</span>
+        <strong>{{ $it.title }}</strong>{{ with $it.creator }}<span class="sh-by"> · {{ . }}</span>{{ end }}
+        {{ with $it.rating }}<span class="sh-stars" aria-label="{{ . }} 星">{{ strings.Repeat (int .) "★" }}{{ strings.Repeat (sub 5 (int .)) "☆" }}</span>{{ end }}
+        {{ with $it.note }}<span class="sh-note">{{ . }}</span>{{ end }}
+      </li>
+      {{ end }}
+    </ol>
+  </section>
+  {{ end }}
+
+  <p class="room-back"><a href="{{ "/shelf/" | relURL }}">← 回到书架</a></p>
+</article>
+<script id="shelf-data" type="application/json">{{ $items | jsonify | safeJS }}</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById('shelf-data').textContent || '[]');
+  var names = {{ $types | jsonify | safeJS }};
+  var grid = document.querySelector('[data-shelf-grid]');
+  var out = document.querySelector('[data-shelf-detail]');
+  if (!grid || !out) return;
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function show(btn) {
+    var it = data[+btn.dataset.i]; if (!it) return;
+    grid.querySelectorAll('.is-on').forEach(function (b) { b.classList.remove('is-on'); });
+    btn.classList.add('is-on');
+    var t = names[it.type] || { name: it.type, en: '' };
+    var r = +it.rating || 0;
+    out.innerHTML = '<span class="sh-tag t-' + esc(it.type) + '">' + esc(t.en) + ' · ' + esc(t.name) + '</span> ' +
+      '<strong>' + esc(it.title) + '</strong>' + (it.creator ? '<span class="sh-by"> · ' + esc(it.creator) + '</span>' : '') +
+      (r ? ' <span class="sh-stars">' + '★'.repeat(r) + '☆'.repeat(5 - r) + '</span>' : '') +
+      '<span class="sh-date">' + esc(String(it.date).slice(0, 10)) + '</span>' +
+      (it.note ? '<span class="sh-note">“' + esc(it.note) + '”</span>' : '');
+  }
+  grid.addEventListener('click', function (e) { var b = e.target.closest('.sh-cell'); if (b) show(b); });
+  grid.addEventListener('mouseover', function (e) { var b = e.target.closest('.sh-cell'); if (b) show(b); });
+})();
+</script>
+{{ end }}
