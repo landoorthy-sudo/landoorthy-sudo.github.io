@@ -25,7 +25,7 @@ hasCJKLanguage = true
 # --- 导航菜单：房间里的家具 ---
 
 [[menu.main]]
-  name = "电脑 · 作品集"
+  name = "书桌 · 作品集"
   url = "/works/"
   weight = 1
 
@@ -35,7 +35,7 @@ hasCJKLanguage = true
   weight = 2
 
 [[menu.main]]
-  name = "书桌 · 技术笔记"
+  name = "电脑 · 技术笔记"
   url = "/notes/"
   weight = 3
 

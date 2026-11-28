@@ -3,7 +3,7 @@
 {{ range site.Data.works }}{{ $d := . }}{{ range .groups }}{{ if eq .group $kind }}{{ $label = .title }}{{ $dir = $d.dir }}{{ end }}{{ end }}{{ end }}
 <article class="blog-single room-page works-page">
   <header class="blog-title">
-    <p class="room-sign">💻 作品集 / {{ $dir }}{{ with $label }} / {{ . }}{{ end }}</p>
+    <p class="room-sign">🖋 作品集 / {{ $dir }}{{ with $label }} / {{ . }}{{ end }}</p>
     <h1>{{ .Title }}</h1>
     {{ with .Params.meta }}<p class="room-lede">{{ . }}</p>{{ end }}
   </header>

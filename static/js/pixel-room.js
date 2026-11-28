@@ -41,60 +41,93 @@
   }
 
   // ---------- 角色 ----------
-  // 丝瓜：大只银渐层，温和的“男妈妈”。头朝左画。
-  const SIGUA_HEAD = [
-    '...k......k...',
-    '..kgk....kgk..',
-    '..kgnkkkkkngk.',
-    '.kgggsgsgsgggk',
-    'kglllllllllggk',
-    'kgkkllllllgggk',
-    'klllllllllgggk',
-    'knwllllllggggk',
-    '.kwwllllgggk..',
-    '..kkwwwwgk....'
+  // 圆角块：先描边再填色，四个角各削掉一个像素
+  function blob(x, y, w, h, line, fill) {
+    rect(x + 1, y, w - 2, h, line); rect(x, y + 1, w, h - 2, line);
+    rect(x + 1, y + 1, w - 2, h - 2, fill);
+  }
+
+  // 丝瓜：大只银渐层，温和的“男妈妈”。Q 版大脑袋，头朝左画。
+  const SG = { o: '#4a4e58', g: '#b9bdc6', l: '#e2e5ea', w: '#fafaf7', s: '#868b96', p: '#f2a3b3', n: '#e8899c', e: '#2a2f3a', h: '#ffffff' };
+  const SIGUA_HEAD_TOP = [
+    '..o.........o..',
+    '.opo.......opo.',
+    '.oppooooooooppo',
+    'oggsgsgsgsgsggo',
+    'ogggggggggggggo'
   ];
-  const SIGUA_EYE_OPEN = 'kgkpllllllgggk';
-  const SG = { k: '#565a62', g: '#b4b8bf', l: '#dfe2e6', w: '#f8f8f5', n: '#e8a0a0', s: '#868a91', p: '#3a4a2a' };
+  const SIGUA_EYES_SLEEP = ['ogggegggggegggo', 'oggegegggegeggo']; // ^ ^
+  const SIGUA_EYES_OPEN = ['ogghegggggheggo', 'oggeegggggeeggo']; // 亮晶晶的大眼睛
+  const SIGUA_HEAD_LOW = [
+    'oglppllnllpplgo',
+    'olllllelelllllo',
+    '.owwwwwwwwwwwo.',
+    '..ooooooooooo..'
+  ];
+  const siguaHead = awake => SIGUA_HEAD_TOP.concat(awake ? SIGUA_EYES_OPEN : SIGUA_EYES_SLEEP, SIGUA_HEAD_LOW);
+
   function siguaLying(lift, tailUp) {
-    rect(9, 3 - lift, 25, 12 + lift, SG.k);
-    rect(10, 4 - lift, 23, 10 + lift, SG.g);
-    rect(10, 10, 22, 4, SG.l);
-    for (let x = 14; x < 31; x += 5) rect(x, 4 - lift, 2, 2, SG.s);
-    rect(32, tailUp ? 9 : 11, 4, 2, SG.k); rect(33, tailUp ? 9 : 11, 2, 1, SG.s);
-    rect(2, 12, 10, 3, SG.k); rect(3, 12, 8, 2, SG.w);
-    sprite(SIGUA_HEAD, SG, 0, 1);
+    // 面包一样的身子
+    blob(10, 4 - lift, 25, 11 + lift, SG.o, SG.g);
+    rect(12, 11, 21, 3, SG.l);
+    for (let x = 15; x < 32; x += 4) { rect(x, 5 - lift, 2, 2, SG.s); rect(x + 1, 7 - lift, 1, 1, SG.s); }
+    // 蓬松尾巴从屁股绕到前面，尾巴尖偶尔翘一下
+    rect(17, 13, 18, 2, SG.o); rect(18, 13, 16, 1, SG.g);
+    for (let x = 20; x < 34; x += 4) rect(x, 13, 2, 1, SG.s);
+    rect(15, tailUp ? 11 : 12, 3, 3, SG.o); rect(16, tailUp ? 12 : 13, 2, 1, SG.w);
+    // 两只白爪子从下巴底下探出来
+    blob(2, 11, 5, 4, SG.o, SG.w); blob(7, 11, 5, 4, SG.o, SG.w);
+    rect(4, 13, 1, 1, SG.l); rect(9, 13, 1, 1, SG.l); // 小肉垫缝
+    sprite(siguaHead(false), SG, 0, 1);
   }
   function siguaWalking(frame) {
-    rect(9, 3, 21, 9, SG.k); rect(10, 4, 19, 7, SG.g); rect(10, 9, 18, 2, SG.l);
-    for (let x = 14; x < 28; x += 5) rect(x, 4, 2, 2, SG.s);
-    rect(28, 1, 2, 4, SG.k); rect(29, -2, 2, 4, SG.k); rect(29, -1, 1, 3, SG.s);
+    blob(9, 4, 21, 9, SG.o, SG.g); rect(11, 9, 17, 3, SG.l);
+    for (let x = 14; x < 28; x += 4) { rect(x, 5, 2, 2, SG.s); rect(x + 1, 7, 1, 1, SG.s); }
+    // 竖起来的尾巴，尖上打个卷
+    rect(28, -1, 3, 6, SG.o); rect(29, 0, 1, 5, SG.g);
+    rect(26, -3, 4, 3, SG.o); rect(27, -2, 2, 1, SG.g);
     const legs = frame ? [[11, 0], [15, 1], [22, 1], [26, 0]] : [[11, 1], [15, 0], [22, 0], [26, 1]];
-    legs.forEach(([lx, up]) => { rect(lx, 11, 3, 4 - up, SG.k); rect(lx, 11, 2, 3 - up, SG.w); });
-    const head = SIGUA_HEAD.slice(); head[5] = SIGUA_EYE_OPEN;
-    sprite(head, SG, 0, 0);
+    legs.forEach(([lx, up]) => { rect(lx, 12, 3, 4 - up, SG.o); rect(lx, 12, 2, 3 - up, SG.w); });
+    sprite(siguaHead(true), SG, 0, 1);
   }
 
   // 南瓜：小只金渐层，被照顾的小宝。
-  const NG = { k: '#6b4a2a', o: '#dba757', d: '#b8843a', c: '#f6e6c2', n: '#e8a0a0', e: '#2b1d10' };
+  const NG = { o: '#7a5230', y: '#e8b35e', d: '#c48a3e', c: '#f8e8c8', p: '#f4a0a8', n: '#e8899c', e: '#3a2614', h: '#ffffff' };
+  // 团成一个毛球睡觉：耳朵、闭着的眼睛、小腮红，尾巴绕到下巴底下
   const NANGUA_CURL = [
-    '.k..k.........',
-    'kdkkdkkkkkk...',
-    'koooooododdk..',
-    'kokkokooooodk.',
-    'koooooodoooook',
-    '.kcnoooooooodk',
-    '.kccoodddddook',
-    '..kkkkkkkkkkk.'
+    '.o....o.........',
+    'opo..opo.oooo...',
+    'oyyooyyoodyydoo.',
+    'oyyyyyyyyyyyyyyo',
+    'oyeeyeeyyyydyyyo',
+    'opccnccpyyyyydyo',
+    '.occccoyydyyyyyo',
+    '.oyddyyddyyddyo.',
+    '..oooooooooooo..'
   ];
-  const NANGUA_HEAD = ['.k...k.', 'kdk.kdk', 'koooook', 'koeoeok', 'kocnook', '.kccok.', '..kkk..'];
+  const NANGUA_HEAD = [
+    '.o......o.',
+    'opo....opo',
+    'oyyooooyyo',
+    'oyyyyyyyyo',
+    'oyheyyheyo',
+    'opeeyyeepo',
+    '.occnncco.',
+    '..oooooo..'
+  ];
   function nanguaWalking(frame) {
-    rect(5, 2, 10, 6, NG.k); rect(6, 3, 8, 4, NG.o); rect(8, 3, 1, 2, NG.d); rect(11, 3, 1, 2, NG.d);
-    rect(14, 0, 2, 3, NG.k); rect(15, -1, 1, 2, NG.d);
-    const legs = frame ? [[6, 0], [12, 1]] : [[6, 1], [12, 0]];
-    legs.forEach(([lx, up]) => { rect(lx, 8, 2, 2 - up, NG.k); rect(lx + 2, 8, 1, 1 + up, NG.k); });
+    blob(6, 3, 11, 6, NG.o, NG.y); rect(8, 7, 7, 1, NG.c);
+    rect(10, 4, 1, 2, NG.d); rect(13, 4, 1, 2, NG.d);
+    rect(15, -1, 2, 5, NG.o); rect(16, 0, 1, 3, NG.d); rect(14, -2, 2, 2, NG.o);
+    const legs = frame ? [[8, 0], [13, 1]] : [[8, 1], [13, 0]];
+    legs.forEach(([lx, up]) => { rect(lx, 9, 2, 2 - up, NG.o); rect(lx + 2, 9, 1, 1 + up, NG.o); });
     sprite(NANGUA_HEAD, NG, 0, 0);
   }
+
+  // 点猫咪时冒出来的小爱心
+  const HEART = ['.r.r.', 'rrrrr', 'rrrrr', '.rrr.', '..r..'];
+  const hearts = [];
+  function popHeart(x, y) { if (!reduceMotion) hearts.push({ x, y, t: 0 }); }
 
   // 阿里：白色长腿小狗，橙色背心。头朝右画。
   const ALI_TOP = [
@@ -255,18 +288,18 @@
     const actors = [];
 
     if (sigua.state === 'nap') {
-      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 83, 36, false, () => siguaLying(breathe, Math.floor(tick / 12) % 2 === 0)), box: ['sigua', sigua.x, 82, 38, 16] });
+      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 84, 36, false, () => siguaLying(breathe, Math.floor(tick / 12) % 2 === 0)), box: ['sigua', sigua.x, 82, 36, 17] });
     } else {
-      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 84, 31, sigua.dir > 0, () => siguaWalking(sigua.frame)), box: ['sigua', sigua.x, 82, 31, 17] });
+      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 83, 31, sigua.dir > 0, () => siguaWalking(sigua.frame)), box: ['sigua', sigua.x, 80, 31, 19] });
     }
 
     if (nangua.state === 'follow') {
-      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 89, 16, nangua.dir > 0, () => nanguaWalking(nangua.frame)), box: ['nangua', nangua.x, 88, 16, 11] });
+      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 89, 18, nangua.dir > 0, () => nanguaWalking(nangua.frame)), box: ['nangua', nangua.x, 87, 18, 12] });
     } else {
-      actors.push({ y: FLOOR + 0.5, draw: () => sprite(NANGUA_CURL, NG, 83, 91), box: ['nangua', 82, 90, 15, 10] });
+      actors.push({ y: FLOOR + 0.5, draw: () => sprite(NANGUA_CURL, NG, 84, 90), box: ['nangua', 83, 89, 18, 11] });
       if (!reduceMotion) {
         const step = Math.floor(tick / 3) % 12;
-        actors.push({ y: 200, draw: () => sprite(ZZZ, { k: '#c9c2f0' }, 92 + (step > 6 ? 1 : 0), 86 - Math.floor(step / 2)) });
+        actors.push({ y: 200, draw: () => sprite(ZZZ, { k: '#c9c2f0' }, 97 + (step > 6 ? 1 : 0), 85 - Math.floor(step / 2)) });
       }
     }
 
@@ -274,6 +307,11 @@
     actors.push({ y: FLOOR - 0.5, draw: () => drawAt(dog.x, 79 - hopY, 16, dog.dir < 0, () => ali(dog.frame, dog.state === 'run')), box: ['ali', dog.x, 77 - hopY, 17, 23] });
 
     actors.sort((a, b) => a.y - b.y).forEach(a => a.draw());
+    for (let i = hearts.length - 1; i >= 0; i--) {
+      const h = hearts[i]; h.t++;
+      if (h.t > 24) { hearts.splice(i, 1); continue; }
+      sprite(HEART, { r: h.t > 16 && h.t % 2 ? '#ff9ec4' : '#ff5fa2' }, Math.round(h.x + Math.sin(h.t / 3)), Math.round(h.y - h.t / 2));
+    }
     Object.keys(boxes).forEach(k => delete boxes[k]);
     actors.forEach(a => { if (a.box) boxes[a.box[0]] = a.box.slice(1); });
   }
@@ -290,8 +328,8 @@
   // ---------- 互动 ----------
   const places = [
     { id: 'lamp', x: 112, y: 49, w: 9, h: 14, label: '台灯 · 开关' },
-    { id: 'laptop', x: 86, y: 51, w: 20, h: 12, label: '电脑 · 作品集', href: '/works/' },
-    { id: 'desk', x: 62, y: 58, w: 66, h: 20, label: '书桌 · 技术笔记', href: '/notes/' },
+    { id: 'laptop', x: 86, y: 51, w: 20, h: 12, label: '电脑 · 技术笔记', href: '/notes/' },
+    { id: 'desk', x: 62, y: 58, w: 66, h: 20, label: '书桌 · 作品集', href: '/works/' },
     { id: 'shelf', x: 134, y: 18, w: 24, h: 70, label: '书架 · 书影音', href: '/shelf/' },
     { id: 'door', x: 166, y: 28, w: 22, h: 46, label: '门 · 关于我', href: '/about/' },
     { id: 'window', x: 8, y: 4, w: 46, h: 40, label: '窗外' }
@@ -353,6 +391,7 @@
       const walking = s.id === 'sigua' ? sigua.state !== 'nap' : nangua.state === 'follow';
       const pool = lines[s.id + (walking ? 'Walk' : '')];
       typeLine(speakers[s.id], pool[Math.floor(Math.random() * pool.length)]);
+      popHeart(s.x + s.w / 2 - 2, s.y - 4);
       return;
     }
     if (s.id === 'ali') {
