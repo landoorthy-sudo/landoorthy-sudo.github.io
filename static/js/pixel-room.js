@@ -47,81 +47,93 @@
     rect(x + 1, y + 1, w - 2, h - 2, fill);
   }
 
-  // 丝瓜：大只银渐层，温和的“男妈妈”。Q 版大脑袋，头朝左画。
-  const SG = { o: '#4a4e58', g: '#b9bdc6', l: '#e2e5ea', w: '#fafaf7', s: '#868b96', p: '#f2a3b3', n: '#e8899c', e: '#2a2f3a', h: '#ffffff' };
-  const SIGUA_HEAD_TOP = [
-    '..o.........o..',
-    '.opo.......opo.',
-    '.oppooooooooppo',
-    'oggsgsgsgsgsggo',
-    'ogggggggggggggo'
-  ];
-  const SIGUA_EYES_SLEEP = ['ogggegggggegggo', 'oggegegggegeggo']; // ^ ^
-  const SIGUA_EYES_OPEN = ['ogghegggggheggo', 'oggeegggggeeggo']; // 亮晶晶的大眼睛
-  const SIGUA_HEAD_LOW = [
-    'oglppllnllpplgo',
-    'olllllelelllllo',
-    '.owwwwwwwwwwwo.',
-    '..ooooooooooo..'
-  ];
-  const siguaHead = awake => SIGUA_HEAD_TOP.concat(awake ? SIGUA_EYES_OPEN : SIGUA_EYES_SLEEP, SIGUA_HEAD_LOW);
+  // 两只猫都是圆滚滚的团子：短身子、大圆脸、正脸朝外，小爪子从底下探出来。
+  // 丝瓜：大只银渐层，温和的“男妈妈”。
+  const SG = { o: '#4a4e58', g: '#bcc0c9', l: '#e4e7ec', w: '#fafaf7', s: '#8a8f9a', p: '#f4a3b5', n: '#e8899c', e: '#2a2f3a', h: '#ffffff', m: '#6b5a66' };
+  const SIGUA_SLEEP = [
+    '....oo..........oo....',
+    '...opo..........opo...',
+    '..ooppooooooooooppoo..',
+    '.oogggggsgssgsgggggoo.',
+    '.ogsgggggsggsgggggsgo.',
+    'ooggggggggggggggggggoo',
+    'oggggggeggggggeggggggo',
+    'ogggggegeggggegegggggo',
+    'ogllppllllnnllllppllgo',
+    'oglllllllmllmlllllllgo',
+    'ogllllllllmmllllllllgo',
+    '.ogllllllllllllllllgo.',
+    '..oowwwollllllowwwoo..',
+    '....oooooooooooooo....'
+  ]; // ^ ^ 睡着了
+  const SIGUA_AWAKE = [
+    '....oo..........oo....',
+    '...opo..........opo...',
+    '..ooppooooooooooppoo..',
+    '.oogggggsgssgsgggggoo.',
+    '.ogsgggggsggsgggggsgo.',
+    'ooggggggggggggggggggoo',
+    'oggggheggggghegggggggo',
+    'oggggeegggggeegggggggo',
+    'oglppllllnllllppllllgo',
+    'ogllllllmlmlllllllllgo',
+    'oglllllllmllllllllllgo',
+    '.ogllllllllllllllllgo.',
+    '..oowwwollllllowwwoo..',
+    '....oooooooooooooo....'
+  ]; // 亮晶晶的眼睛，脸稍微朝左
+  // 呼吸：把身子中间那一行多画一次，团子就鼓起来一点
+  const puff = (rows, on) => on ? rows.slice(0, 5).concat([rows[4]], rows.slice(5)) : rows;
 
   function siguaLying(lift, tailUp) {
-    // 面包一样的身子
-    blob(10, 4 - lift, 25, 11 + lift, SG.o, SG.g);
-    rect(12, 11, 21, 3, SG.l);
-    for (let x = 15; x < 32; x += 4) { rect(x, 5 - lift, 2, 2, SG.s); rect(x + 1, 7 - lift, 1, 1, SG.s); }
-    // 蓬松尾巴从屁股绕到前面，尾巴尖偶尔翘一下
-    rect(17, 13, 18, 2, SG.o); rect(18, 13, 16, 1, SG.g);
-    for (let x = 20; x < 34; x += 4) rect(x, 13, 2, 1, SG.s);
-    rect(15, tailUp ? 11 : 12, 3, 3, SG.o); rect(16, tailUp ? 12 : 13, 2, 1, SG.w);
-    // 两只白爪子从下巴底下探出来
-    blob(2, 11, 5, 4, SG.o, SG.w); blob(7, 11, 5, 4, SG.o, SG.w);
-    rect(4, 13, 1, 1, SG.l); rect(9, 13, 1, 1, SG.l); // 小肉垫缝
-    sprite(siguaHead(false), SG, 0, 1);
+    // 尾巴从右边绕出来，尖尖偶尔翘一下
+    rect(19, 8, 4, 4, SG.o); rect(20, 9, 2, 2, SG.g);
+    rect(21, tailUp ? 4 : 5, 3, 5, SG.o); rect(22, tailUp ? 5 : 6, 1, 3, SG.s);
+    sprite(puff(SIGUA_SLEEP, lift), SG, 0, 1 - lift);
   }
   function siguaWalking(frame) {
-    blob(9, 4, 21, 9, SG.o, SG.g); rect(11, 9, 17, 3, SG.l);
-    for (let x = 14; x < 28; x += 4) { rect(x, 5, 2, 2, SG.s); rect(x + 1, 7, 1, 1, SG.s); }
-    // 竖起来的尾巴，尖上打个卷
-    rect(28, -1, 3, 6, SG.o); rect(29, 0, 1, 5, SG.g);
-    rect(26, -3, 4, 3, SG.o); rect(27, -2, 2, 1, SG.g);
-    const legs = frame ? [[11, 0], [15, 1], [22, 1], [26, 0]] : [[11, 1], [15, 0], [22, 0], [26, 1]];
-    legs.forEach(([lx, up]) => { rect(lx, 12, 3, 4 - up, SG.o); rect(lx, 12, 2, 3 - up, SG.w); });
-    sprite(siguaHead(true), SG, 0, 1);
+    // 竖着的尾巴
+    rect(18, -1, 3, 6, SG.o); rect(19, 0, 1, 5, SG.g); rect(18, -3, 3, 3, SG.o); rect(19, -2, 1, 1, SG.s);
+    const legs = frame ? [[4, 0], [8, 1], [12, 1], [15, 0]] : [[4, 1], [8, 0], [12, 0], [15, 1]];
+    legs.forEach(([lx, up]) => { rect(lx, 13, 3, 3 - up, SG.o); rect(lx + 1, 13, 1, 2 - up, SG.w); });
+    sprite(SIGUA_AWAKE, SG, 0, 0);
   }
 
-  // 南瓜：小只金渐层，被照顾的小宝。
-  const NG = { o: '#7a5230', y: '#e8b35e', d: '#c48a3e', c: '#f8e8c8', p: '#f4a0a8', n: '#e8899c', e: '#3a2614', h: '#ffffff' };
-  // 团成一个毛球睡觉：耳朵、闭着的眼睛、小腮红，尾巴绕到下巴底下
-  const NANGUA_CURL = [
-    '.o....o.........',
-    'opo..opo.oooo...',
-    'oyyooyyoodyydoo.',
-    'oyyyyyyyyyyyyyyo',
-    'oyeeyeeyyyydyyyo',
-    'opccnccpyyyyydyo',
-    '.occccoyydyyyyyo',
-    '.oyddyyddyyddyo.',
-    '..oooooooooooo..'
+  // 南瓜：小只金渐层，被照顾的小宝。也是一个小团子。
+  const NG = { o: '#7a5230', y: '#ebb862', d: '#c8903f', c: '#f8e8c8', p: '#f4a0a8', n: '#e8899c', e: '#3a2614', h: '#ffffff', m: '#7a5a50' };
+  const NANGUA_SLEEP = [
+    '..o.......o..',
+    '.opo.....opo.',
+    '..pooooooop..',
+    '.oyydydydyyo.',
+    'oyyyydydyyyyo',
+    'oyyyeyyyeyyyo',
+    'oyyeyeyeyeyyo',
+    'oypcccncccpyo',
+    '.oyccmcmccyo.',
+    '..ooooooooo..'
   ];
-  const NANGUA_HEAD = [
-    '.o......o.',
-    'opo....opo',
-    'oyyooooyyo',
-    'oyyyyyyyyo',
-    'oyheyyheyo',
-    'opeeyyeepo',
-    '.occnncco.',
-    '..oooooo..'
+  const NANGUA_AWAKE = [
+    '..o.......o..',
+    '.opo.....opo.',
+    '..pooooooop..',
+    '.oyydydydyyo.',
+    'oyyyydydyyyyo',
+    'oyyheyyheyyyo',
+    'oyyeeyyeeyyyo',
+    'oypcccnccpcyo',
+    '.oycccmcccyo.',
+    '..ooooooooo..'
   ];
+  function nanguaCurl() {
+    rect(11, 6, 3, 3, NG.o); rect(12, 7, 1, 1, NG.d); // 小尾巴卷在身边
+    sprite(NANGUA_SLEEP, NG, 0, 0);
+  }
   function nanguaWalking(frame) {
-    blob(6, 3, 11, 6, NG.o, NG.y); rect(8, 7, 7, 1, NG.c);
-    rect(10, 4, 1, 2, NG.d); rect(13, 4, 1, 2, NG.d);
-    rect(15, -1, 2, 5, NG.o); rect(16, 0, 1, 3, NG.d); rect(14, -2, 2, 2, NG.o);
-    const legs = frame ? [[8, 0], [13, 1]] : [[8, 1], [13, 0]];
-    legs.forEach(([lx, up]) => { rect(lx, 9, 2, 2 - up, NG.o); rect(lx + 2, 9, 1, 1 + up, NG.o); });
-    sprite(NANGUA_HEAD, NG, 0, 0);
+    rect(11, 0, 2, 5, NG.o); rect(12, -1, 2, 2, NG.o); rect(11, 1, 1, 3, NG.d);
+    const legs = frame ? [[2, 0], [8, 1]] : [[2, 1], [8, 0]];
+    legs.forEach(([lx, up]) => { rect(lx, 9, 3, 2 - up, NG.o); rect(lx + 1, 9, 1, 1 - up, NG.c); });
+    sprite(NANGUA_AWAKE, NG, 0, 0);
   }
 
   // 点猫咪时冒出来的小爱心
@@ -162,7 +174,7 @@
   const FLOOR = 99;
   const RUG_X = 64;
   const sigua = { x: RUG_X, state: 'nap', dir: -1, target: RUG_X, wait: rand(40, 90), frame: 0 };
-  const nangua = { x: 83, state: 'curl', dir: -1, frame: 0 };
+  const nangua = { x: 86, state: 'curl', dir: -1, frame: 0 };
   const dog = { x: 116, dir: 1, state: 'idle', target: 116, wait: rand(10, 30), hop: 0, frame: 0 };
   const HOP = [0, 2, 4, 5, 5, 4, 2, 0];
 
@@ -190,9 +202,9 @@
     }
     // 南瓜：跟在丝瓜身后，或者自己接着睡
     if (nangua.state === 'follow') {
-      const want = sigua.x + (sigua.dir > 0 ? -14 : 30);
+      const want = sigua.x + (sigua.dir > 0 ? -15 : 25);
       if (Math.abs(want - nangua.x) > 1) { nangua.dir = want > nangua.x ? 1 : -1; nangua.x += nangua.dir * 1.2; if (tick % 2 === 0) nangua.frame ^= 1; }
-      if (sigua.state === 'nap') { nangua.state = 'curl'; nangua.x = 83; }
+      if (sigua.state === 'nap') { nangua.state = 'curl'; nangua.x = 86; }
     } else if (nangua.state === 'alone' && sigua.state === 'nap') nangua.state = 'curl';
 
     // 阿里：在右半边跑来跑去，偶尔原地蹦两下
@@ -288,18 +300,18 @@
     const actors = [];
 
     if (sigua.state === 'nap') {
-      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 84, 36, false, () => siguaLying(breathe, Math.floor(tick / 12) % 2 === 0)), box: ['sigua', sigua.x, 82, 36, 17] });
+      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 84, 24, false, () => siguaLying(breathe, Math.floor(tick / 12) % 2 === 0)), box: ['sigua', sigua.x, 83, 24, 16] });
     } else {
-      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 83, 31, sigua.dir > 0, () => siguaWalking(sigua.frame)), box: ['sigua', sigua.x, 80, 31, 19] });
+      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 85, 22, sigua.dir > 0, () => siguaWalking(sigua.frame)), box: ['sigua', sigua.x, 82, 22, 17] });
     }
 
     if (nangua.state === 'follow') {
-      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 89, 18, nangua.dir > 0, () => nanguaWalking(nangua.frame)), box: ['nangua', nangua.x, 87, 18, 12] });
+      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 88, 14, nangua.dir > 0, () => nanguaWalking(nangua.frame)), box: ['nangua', nangua.x, 87, 14, 12] });
     } else {
-      actors.push({ y: FLOOR + 0.5, draw: () => sprite(NANGUA_CURL, NG, 84, 90), box: ['nangua', 83, 89, 18, 11] });
+      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 89, 14, false, nanguaCurl), box: ['nangua', nangua.x, 88, 14, 11] });
       if (!reduceMotion) {
         const step = Math.floor(tick / 3) % 12;
-        actors.push({ y: 200, draw: () => sprite(ZZZ, { k: '#c9c2f0' }, 97 + (step > 6 ? 1 : 0), 85 - Math.floor(step / 2)) });
+        actors.push({ y: 200, draw: () => sprite(ZZZ, { k: '#c9c2f0' }, 98 + (step > 6 ? 1 : 0), 84 - Math.floor(step / 2)) });
       }
     }
 
