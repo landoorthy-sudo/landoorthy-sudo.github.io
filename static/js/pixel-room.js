@@ -47,94 +47,149 @@
     rect(x + 1, y + 1, w - 2, h - 2, fill);
   }
 
-  // 两只猫都是圆滚滚的团子：短身子、大圆脸、正脸朝外，小爪子从底下探出来。
-  // 丝瓜：大只银渐层，温和的“男妈妈”。
-  const SG = { o: '#4a4e58', g: '#bcc0c9', l: '#e4e7ec', w: '#fafaf7', s: '#8a8f9a', p: '#f4a3b5', n: '#e8899c', e: '#2a2f3a', h: '#ffffff', m: '#6b5a66' };
+  // 两只猫按照真猫的样子画：圆脸、大三角耳、大眼睛，身子是正常猫的比例。
+  // 像素图由脚本生成，每个字母是一种颜色（见 SG / NG）。头朝左画，往右走时翻转。
+  // 丝瓜：大只银渐层，浅银白色，背上颜色深一点，额头细条纹，绿眼睛，白爪子，环纹尾巴。
+  const SG = { o: '#5a5e68', g: '#dadde2', s: '#b6bac2', t: '#868b95', w: '#fafaf7', p: '#eaa2ad', n: '#d98a8f', e: '#2a2a30', G: '#a8bd6a', h: '#ffffff', b: '#f2bcc5' };
   const SIGUA_SLEEP = [
-    '....oo..........oo....',
-    '...opo..........opo...',
-    '..ooppooooooooooppoo..',
-    '.oogggggsgssgsgggggoo.',
-    '.ogsgggggsggsgggggsgo.',
-    'ooggggggggggggggggggoo',
-    'oggggggeggggggeggggggo',
-    'ogggggegeggggegegggggo',
-    'ogllppllllnnllllppllgo',
-    'oglllllllmllmlllllllgo',
-    'ogllllllllmmllllllllgo',
-    '.ogllllllllllllllllgo.',
-    '..oowwwollllllowwwoo..',
-    '....oooooooooooooo....'
-  ]; // ^ ^ 睡着了
-  const SIGUA_AWAKE = [
-    '....oo..........oo....',
-    '...opo..........opo...',
-    '..ooppooooooooooppoo..',
-    '.oogggggsgssgsgggggoo.',
-    '.ogsgggggsggsgggggsgo.',
-    'ooggggggggggggggggggoo',
-    'oggggheggggghegggggggo',
-    'oggggeegggggeegggggggo',
-    'oglppllllnllllppllllgo',
-    'ogllllllmlmlllllllllgo',
-    'oglllllllmllllllllllgo',
-    '.ogllllllllllllllllgo.',
-    '..oowwwollllllowwwoo..',
-    '....oooooooooooooo....'
-  ]; // 亮晶晶的眼睛，脸稍微朝左
-  // 呼吸：把身子中间那一行多画一次，团子就鼓起来一点
-  const puff = (rows, on) => on ? rows.slice(0, 5).concat([rows[4]], rows.slice(5)) : rows;
-
-  function siguaLying(lift, tailUp) {
-    // 尾巴从右边绕出来，尖尖偶尔翘一下
-    rect(19, 8, 4, 4, SG.o); rect(20, 9, 2, 2, SG.g);
-    rect(21, tailUp ? 4 : 5, 3, 5, SG.o); rect(22, tailUp ? 5 : 6, 1, 3, SG.s);
-    sprite(puff(SIGUA_SLEEP, lift), SG, 0, 1 - lift);
-  }
-  function siguaWalking(frame) {
-    // 竖着的尾巴
-    rect(18, -1, 3, 6, SG.o); rect(19, 0, 1, 5, SG.g); rect(18, -3, 3, 3, SG.o); rect(19, -2, 1, 1, SG.s);
-    const legs = frame ? [[4, 0], [8, 1], [12, 1], [15, 0]] : [[4, 1], [8, 0], [12, 0], [15, 1]];
-    legs.forEach(([lx, up]) => { rect(lx, 13, 3, 3 - up, SG.o); rect(lx + 1, 13, 1, 2 - up, SG.w); });
-    sprite(SIGUA_AWAKE, SG, 0, 0);
-  }
-
-  // 南瓜：小只金渐层，被照顾的小宝。也是一个小团子。
-  const NG = { o: '#7a5230', y: '#ebb862', d: '#c8903f', c: '#f8e8c8', p: '#f4a0a8', n: '#e8899c', e: '#3a2614', h: '#ffffff', m: '#7a5a50' };
-  const NANGUA_SLEEP = [
-    '..o.......o..',
-    '.opo.....opo.',
-    '..pooooooop..',
-    '.oyydydydyyo.',
-    'oyyyydydyyyyo',
-    'oyyyeyyyeyyyo',
-    'oyyeyeyeyeyyo',
-    'oypcccncccpyo',
-    '.oyccmcmccyo.',
-    '..ooooooooo..'
+    '..o..........o..................',
+    '.ogo........ogo.................',
+    '.opgo......ogpo.................',
+    '.oppgoooooogppo.................',
+    '.ogppggttggppgo.................',
+    '.oggggtggtggggo.oooooooo........',
+    '.ogggggttgggggoossssssssooo.....',
+    'oggggggggggggggosssssssssssoo...',
+    'ogeggeggggeggegogggggggggggggo..',
+    'oggeeggggggeeggoggggggggggggggo.',
+    'oggggwwwwwwggggoggggggggggggggo.',
+    '.oggwwwnnwwwggoggggggggggggggggo',
+    '.oggwwwwwwwwggogggggggggggggggo.',
+    '..oogwwwwwwgooggggggggggggggggo.',
+    '....oooooooogggggggggggggggggo..',
+    '..oooo....owwwggggggggggggggo...',
+    '.owwwwo..owwwwooggtggtggooooooo.',
+    '..oooo....oooo..oooooooo........'
   ];
-  const NANGUA_AWAKE = [
-    '..o.......o..',
-    '.opo.....opo.',
-    '..pooooooop..',
-    '.oyydydydyyo.',
-    'oyyyydydyyyyo',
-    'oyyheyyheyyyo',
-    'oyyeeyyeeyyyo',
-    'oypcccnccpcyo',
-    '.oycccmcccyo.',
-    '..ooooooooo..'
+  const SIGUA_SLEEP_TAIL = [
+    '..o..........o..................',
+    '.ogo........ogo.................',
+    '.opgo......ogpo.................',
+    '.oppgoooooogppo.................',
+    '.ogppggttggppgo.................',
+    '.oggggtggtggggo.oooooooo........',
+    '.ogggggttgggggoossssssssooo.....',
+    'oggggggggggggggosssssssssssoo...',
+    'ogeggeggggeggegogggggggggggggo..',
+    'oggeeggggggeeggoggggggggggggggo.',
+    'oggggwwwwwwggggoggggggggggggggo.',
+    '.oggwwwnnwwwggoggggggggggggggggo',
+    '.oggwwwwwwwwggogggggggggggggggo.',
+    '..oogwwwwwwgooggggggggggggggggo.',
+    '....oooooooogggggggggggggggggo..',
+    '..oooo....owwwggggggggggggggo...',
+    '.owwwwo..owwwwooggtggtggooooooo.',
+    '..oooo....oooo..oooooooo........'
   ];
-  function nanguaCurl() {
-    rect(11, 6, 3, 3, NG.o); rect(12, 7, 1, 1, NG.d); // 小尾巴卷在身边
-    sprite(NANGUA_SLEEP, NG, 0, 0);
-  }
-  function nanguaWalking(frame) {
-    rect(11, 0, 2, 5, NG.o); rect(12, -1, 2, 2, NG.o); rect(11, 1, 1, 3, NG.d);
-    const legs = frame ? [[2, 0], [8, 1]] : [[2, 1], [8, 0]];
-    legs.forEach(([lx, up]) => { rect(lx, 9, 3, 2 - up, NG.o); rect(lx + 1, 9, 1, 1 - up, NG.c); });
-    sprite(NANGUA_AWAKE, NG, 0, 0);
-  }
+  const SIGUA_WALK = [[
+    '.ooo........ooo.................',
+    '.opgo......ogpo.................',
+    '.oppgoooooogppo.............oo..',
+    '.ogppgttgggppgo..............oo.',
+    '..oggtggtggggo...............oo.',
+    '.oggggttggggggo...............oo',
+    'oggggggggggggggooooooooo......oo',
+    'ogeeggggggeegggossssssssooo...oo',
+    'oeheeggggeheeggossssssssssso..oo',
+    'oeGGeggggeGGeggoggggggggggggooo.',
+    'ogGGwwwwwwGGgggoggggggggggggo...',
+    'bogwwwnnwwwggbogggggggggggggo...',
+    '.ogwwwwwwwwgggogggggggggggggo...',
+    '..oowwwwwwggoogggggggggggggo....',
+    '....oooooooogogggwwwwgggoggo....',
+    '..........owo.oggooooggo.owo....',
+    '..........owo.owo....owo.owo....',
+    '..........ooo.owo....owo.ooo....',
+    '..............ooo....ooo........',
+    '................................'
+  ], [
+    '.ooo........ooo.................',
+    '.opgo......ogpo.................',
+    '.oppgoooooogppo.............oo..',
+    '.ogppgttgggppgo..............oo.',
+    '..oggtggtggggo...............oo.',
+    '.oggggttggggggo...............oo',
+    'oggggggggggggggooooooooo......oo',
+    'ogeeggggggeegggossssssssooo...oo',
+    'oeheeggggeheeggossssssssssso..oo',
+    'oeGGeggggeGGeggoggggggggggggooo.',
+    'ogGGwwwwwwGGgggoggggggggggggo...',
+    'bogwwwnnwwwggbogggggggggggggo...',
+    '.ogwwwwwwwwgggogggggggggggggo...',
+    '..oowwwwwwggoogggggggggggggo....',
+    '....oooooooogogggwwwwgggoggo....',
+    '..........ogo.owwoooowwo.ogo....',
+    '..........owo.owo....owo.owo....',
+    '..........owo.ooo....ooo.owo....',
+    '..........ooo............ooo....',
+    '................................'
+  ]];
+  // 南瓜：小只金渐层，杏金色，额头一块灰棕带 M 字纹，奶油色嘴套。
+  const NG = { o: '#6e4a2c', g: '#e6ae66', s: '#8f8178', t: '#b98245', w: '#f8e7c6', p: '#eaa2ad', n: '#c98070', e: '#2a2018', G: '#7d8a5a', h: '#ffffff', b: '#f2b0a8' };
+  const NANGUA_CURL = [
+    '.ooo....ooo.........',
+    '.opgo..ogpo.........',
+    '.oppsoosppo.........',
+    '.ogppttppgooooooo...',
+    '.ogggttgggogtggtgo..',
+    'oggggggggggotggtggo.',
+    'oggeggggeggotggtggto',
+    'oeeggggggeeogggggggo',
+    'oggwwwwwwggogggggggo',
+    '.owwwnnwwwogbgggggo.',
+    '.oowwwwwwoowwwwwwo..',
+    '...oooooooooooooooo.',
+    '....................'
+  ];
+  const NANGUA_WALK = [[
+    '.oooo..oooo...........',
+    '.oppsoogppo...........',
+    '.ogpttgppgo...........',
+    '.oggttggggo.........o.',
+    'oeggggggeegooooo.....o',
+    'oeeggggeheeotggtooo..o',
+    'oGeggggeGGeotggtggtoo.',
+    'oGwwwwwwGGgotggtggtgo.',
+    '.owwnnwwwgobggggggggo.',
+    '.oowwwwwwooggggggggo..',
+    '...oooooowwwwwwwwwo...',
+    '........oggooooggo....',
+    '........ooo....ogo....',
+    '...............ooo....',
+    '......................'
+  ], [
+    '.oooo..oooo...........',
+    '.oppsoogppo...........',
+    '.ogpttgppgo...........',
+    '.oggttggggo.........o.',
+    'oeggggggeegooooo.....o',
+    'oeeggggeheeotggtooo..o',
+    'oGeggggeGGeotggtggtoo.',
+    'oGwwwwwwGGgotggtggtgo.',
+    '.owwnnwwwgobggggggggo.',
+    '.oowwwwwwooggggggggo..',
+    '...oooooowwwwwwwwwo...',
+    '........oggooooggo....',
+    '........ogo....ooo....',
+    '........ooo...........',
+    '......................'
+  ]];
+  // 呼吸：把第 8 行多画一次，身子轻轻鼓起来
+  const puff = (rows, on) => on ? rows.slice(0, 8).concat([rows[8]], rows.slice(8)) : rows;
+  function siguaLying(lift, tailUp) { sprite(puff(tailUp ? SIGUA_SLEEP_TAIL : SIGUA_SLEEP, lift), SG, 0, -lift); }
+  function siguaWalking(frame) { sprite(SIGUA_WALK[frame], SG, 0, 0); }
+  function nanguaCurl() { sprite(NANGUA_CURL, NG, 0, 0); }
+  function nanguaWalking(frame) { sprite(NANGUA_WALK[frame], NG, 0, 0); }
 
   // 点猫咪时冒出来的小爱心
   const HEART = ['.r.r.', 'rrrrr', 'rrrrr', '.rrr.', '..r..'];
@@ -174,7 +229,7 @@
   const FLOOR = 99;
   const RUG_X = 64;
   const sigua = { x: RUG_X, state: 'nap', dir: -1, target: RUG_X, wait: rand(40, 90), frame: 0 };
-  const nangua = { x: 86, state: 'curl', dir: -1, frame: 0 };
+  const nangua = { x: 93, state: 'curl', dir: -1, frame: 0 };
   const dog = { x: 116, dir: 1, state: 'idle', target: 116, wait: rand(10, 30), hop: 0, frame: 0 };
   const HOP = [0, 2, 4, 5, 5, 4, 2, 0];
 
@@ -189,10 +244,10 @@
   function update() {
     // 丝瓜：趴着陪南瓜 → 起身溜达 → 回来趴下
     if (sigua.state === 'nap' && --sigua.wait <= 0) {
-      sigua.state = 'walk'; sigua.target = Math.round(rand(8, 150));
-      if (Math.abs(sigua.target - RUG_X) < 20) sigua.target = sigua.target < RUG_X ? 20 : 120;
+      sigua.state = 'walk'; sigua.target = Math.round(rand(4, 100));
+      if (Math.abs(sigua.target - RUG_X) < 20) sigua.target = sigua.target < RUG_X ? 20 : 100;
       nangua.state = Math.random() < 0.6 ? 'follow' : 'alone';
-      if (nangua.state === 'follow') nangua.x = 86;
+      if (nangua.state === 'follow') nangua.x = 93;
     } else if (sigua.state === 'walk' && stepToward(sigua, 1)) {
       sigua.state = 'pause'; sigua.wait = rand(15, 35);
     } else if (sigua.state === 'pause' && --sigua.wait <= 0) {
@@ -202,9 +257,9 @@
     }
     // 南瓜：跟在丝瓜身后，或者自己接着睡
     if (nangua.state === 'follow') {
-      const want = sigua.x + (sigua.dir > 0 ? -15 : 25);
+      const want = sigua.x + (sigua.dir > 0 ? -21 : 31);
       if (Math.abs(want - nangua.x) > 1) { nangua.dir = want > nangua.x ? 1 : -1; nangua.x += nangua.dir * 1.2; if (tick % 2 === 0) nangua.frame ^= 1; }
-      if (sigua.state === 'nap') { nangua.state = 'curl'; nangua.x = 86; }
+      if (sigua.state === 'nap') { nangua.state = 'curl'; nangua.x = 93; }
     } else if (nangua.state === 'alone' && sigua.state === 'nap') nangua.state = 'curl';
 
     // 阿里：在右半边跑来跑去，偶尔原地蹦两下
@@ -300,18 +355,18 @@
     const actors = [];
 
     if (sigua.state === 'nap') {
-      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 84, 24, false, () => siguaLying(breathe, Math.floor(tick / 12) % 2 === 0)), box: ['sigua', sigua.x, 83, 24, 16] });
+      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 82, 32, false, () => siguaLying(breathe, Math.floor(tick / 12) % 2 === 0)), box: ['sigua', sigua.x, 81, 32, 18] });
     } else {
-      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 85, 22, sigua.dir > 0, () => siguaWalking(sigua.frame)), box: ['sigua', sigua.x, 82, 22, 17] });
+      actors.push({ y: FLOOR, draw: () => drawAt(sigua.x, 81, 32, sigua.dir > 0, () => siguaWalking(sigua.frame)), box: ['sigua', sigua.x, 81, 32, 19] });
     }
 
     if (nangua.state === 'follow') {
-      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 88, 14, nangua.dir > 0, () => nanguaWalking(nangua.frame)), box: ['nangua', nangua.x, 87, 14, 12] });
+      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 86, 22, nangua.dir > 0, () => nanguaWalking(nangua.frame)), box: ['nangua', nangua.x, 86, 22, 14] });
     } else {
-      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 89, 14, false, nanguaCurl), box: ['nangua', nangua.x, 88, 14, 11] });
+      actors.push({ y: FLOOR + 0.5, draw: () => drawAt(nangua.x, 87, 20, false, nanguaCurl), box: ['nangua', nangua.x, 87, 20, 13] });
       if (!reduceMotion) {
         const step = Math.floor(tick / 3) % 12;
-        actors.push({ y: 200, draw: () => sprite(ZZZ, { k: '#c9c2f0' }, 98 + (step > 6 ? 1 : 0), 84 - Math.floor(step / 2)) });
+        actors.push({ y: 200, draw: () => sprite(ZZZ, { k: '#c9c2f0' }, 104 + (step > 6 ? 1 : 0), 82 - Math.floor(step / 2)) });
       }
     }
 
